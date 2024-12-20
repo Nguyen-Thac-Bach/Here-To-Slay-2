@@ -1,0 +1,214 @@
+{
+    "Monsters":[
+        {
+            "id": 7,
+            "type": "monster",
+            "name": "Harcedzett Bagolymedve",
+            "img": "",
+            "requirement":{
+                "class": "thief",
+                "otherHeroAmount": 1
+            },
+            "maxForPenalty": 4,
+            "penalty": "DOBJ EL 2 kártyát!",
+            "minForReward":8,
+            "reward": "PUSZTÍTSD EL ezt a szörnykártyát!",
+            "description": "Amikor eszközkártyát játszol ki, nem tehetik próbára azt."
+        },
+        {
+            "id": 8,
+            "type": "monster",
+            "name": "Óriás Rex",
+            "img": "",
+            "requirement":{
+                "class": "guardian",
+                "otherHeroAmount": 1
+            },
+            "maxForPenalty": 4,
+            "penalty": "DOBJ EL 2 kártyát!",
+            "minForReward":8,
+            "reward": "PUSZTÍTSD EL ezt a szörnykártyát!",
+            "description": "Minden alkalommal, amikor módosítókártyát HÚZOL a főpakliból, megutathatod azt, és HÚZZ egy második kártyát is."
+        },
+        {
+            "id": 9,
+            "type": "monster",
+            "name": "Orthosz",
+            "img": "",
+            "requirement":{
+                "class": "wizard",
+                "otherHeroAmount": 1
+            },
+            "maxForPenalty": 4,
+            "penalty": "DOBJ EL 2 kártyát!",
+            "minForReward":8,
+            "reward": "PUSZTÍTSD EL ezt a szörnykártyát!",
+            "description": "Minden alkalommal, amikor varázslatkártyát HÚZOL a főpakliból, azonnal kijátszhatod azt."
+        },
+        {
+            "id": 10,
+            "type": "monster",
+            "name": "Malamamut",
+            "img": "",
+            "requirement":{
+                "class": "ranger",
+                "otherHeroAmount": 1
+            },
+            "maxForPenalty": 4,
+            "penalty": "DOBJ EL 2 kártyát!",
+            "minForReward":8,
+            "reward": "PUSZTÍTSD EL ezt a szörnykártyát!",
+            "description": "Minden alkalommal, amikor eszközkártyát HÚZOL a főpakliból, azonnal kijátszhatod azt."
+        },
+        {
+            "id": 11,
+            "type": "monster",
+            "name": "Sötét Sárkánykirály",
+            "img": "",
+            "requirement":{
+                "class": "bard",
+                "otherHeroAmount": 1
+            },
+            "maxForPenalty": 4,
+            "penalty": "DOBJ EL 2 kártyát!",
+            "minForReward":8,
+            "reward": "PUSZTÍTSD EL ezt a szörnykártyát!",
+            "description": "Minden alkalommal, amikor hőskártya képessége miatt dobsz a dobókockákkal, adj +1-et az összértékhez!"
+        },
+        {
+            "id": 12,
+            "type": "monster",
+            "name": "Titán Wyvern",
+            "img": "",
+            "requirement":{
+                "class": "fighter",
+                "otherHeroAmount": 1
+            },
+            "maxForPenalty": 4,
+            "penalty": "DOBJ EL 2 kártyát!",
+            "minForReward":8,
+            "reward": "PUSZTÍTSD EL ezt a szörnykártyát!",
+            "description": "Minden alkalommal, amikor próbatételkártya miatt dobsz a dobókockákkal, adj +1-et az összértékhez!"
+        },
+        {
+            "id": 13,
+            "type": "monster",
+            "name": "Sarki Aries",
+            "img": "",
+            "requirement":{
+                "class": "none",
+                "otherHeroAmount": 1
+            },
+            "maxForPenalty": 6,
+            "penalty": "ÁLDOZD FEL egy hőskártyád!",
+            "minForReward":10,
+            "reward": "PUSZTÍTSD EL ezt a szörnykártyát!",
+            "description": "Minden alkalommal, amikor egy hőskártya képességének használata miatt sikeresen dobsz a dobókockákkal, HÚZHATSZ egy kártyát a főpakliból."
+        },
+        {
+            "id": 14,
+            "type": "monster",
+            "name": "TerrorTeki",
+            "img": "",
+            "requirement":{
+                "class": "none",
+                "otherHeroAmount": 1
+            },
+            "maxForPenalty": 7,
+            "penalty": "ÁLDOZD FEL egy hőskártyád!",
+            "minForReward":11,
+            "reward": "PUSZTÍTSD EL ezt a szörnykártyát!",
+            "description": "A hőskártyáidat nem lehet megsemmisíteni."
+        },
+        {
+            "id": 15,
+            "type": "monster",
+            "name": "Tollas Kígyó",
+            "img": "",
+            "requirement":{
+                "class": "none",
+                "otherHeroAmount": 2
+            },
+            "maxForPenalty": 7,
+            "penalty": "ÁLDOZD FEL egy hőskártyád!",
+            "minForReward":10,
+            "reward": "PUSZTÍTSD EL ezt a szörnykártyát!",
+            "description": "Minden alkalommal, amikor egy játékos (téged is beleértve) módosítókártyát játszik ki, HÚZHATSZ egy kártyát a főpakliból."
+        },
+        {
+            "id": 16,
+            "type": "monster",
+            "name": "Vérszárny",
+            "img": "",
+            "requirement":{
+                "class": "none",
+                "otherHeroAmount": 2
+            },
+            "maxForPenalty": 6,
+            "penalty": "ÁLDOZD FEL egy hőskártyád!",
+            "minForReward":9,
+            "reward": "PUSZTÍTSD EL ezt a szörnykártyát!",
+            "description": "Minden alkalommal, amikor egy másik játékos PRÓBÁRA TESZ, annak a játékosnak EL KELL DOBNIA egy kártyát!"
+        },
+        {
+            "id": 17,
+            "type": "monster",
+            "name": "Abyss Királynője",
+            "img": "",
+            "requirement":{
+                "class": "none",
+                "otherHeroAmount": 2
+            },
+            "maxForPenalty": 5,
+            "penalty": "ÁLDOZD FEL egy hőskártyád!",
+            "minForReward": 8,
+            "reward": "PUSZTÍTSD EL ezt a szörnykártyát!",
+            "description": "Minden alkalommal, amikor a te kockadobásod során egy másik játékos módosítókártyát játszik ki, adj +1-et az összértékhez!"
+        },
+        {
+            "id": 18,
+            "type": "monster",
+            "name": "Elátkozott Kardfogú",
+            "img": "",
+            "requirement":{
+                "class": "none",
+                "otherHeroAmount": 3
+            },
+            "maxForPenalty": 6,
+            "penalty": "ÁLDOZD FEL egy hőskártyád!",
+            "minForReward": 9,
+            "reward": "PUSZTÍTSD EL ezt a szörnykártyát és HÚZZ egy kártyát a főpakliból!",
+            "description": "Minden alkalommal, amikor MEGSEMMISÍTENÉL egy hőskártyát, helyette ELLOPHATOD azt a hőskártyát!"
+        },
+        {
+            "id": 19,
+            "type": "monster",
+            "name": "Savköpő Varangy",
+            "img": "",
+            "requirement":{
+                "class": "none",
+                "otherHeroAmount": 3
+            },
+            "maxForPenalty": 6,
+            "penalty": "ÁLDOZD FEL egy hőskártyád!",
+            "minForReward":7,
+            "reward": "PUSZTÍTSD EL ezt a szörnykártyát!",
+            "description": "Minden alkalommal, amikor dobsz a dobókockákkal, adj +1-et az összértékhez!"
+        },
+        {
+            "id": 20,
+            "type": "monster",
+            "name": "Megatakony",
+            "img": "",
+            "requirement":{
+                "class": "none",
+                "otherHeroAmount": 4
+            },
+            "maxForPenalty": 7,
+            "penalty": "ÁLDOZD FEL egy hőskártyád!",
+            "minForReward":8,
+            "reward": "PUSZTÍTSD EL ezt a szörnykártyát és HÚZZ 2 kártyát a főpakliból!",
+            "description": "Minden körödben eggyel több akciópontot költhetsz el."
+        }
+    ]
+}

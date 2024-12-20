@@ -1,0 +1,52 @@
+{
+    "leaderHeroes":[
+        {
+            "id": 1,
+            "type": "leader hero",
+            "name": "Elbűvölő Dalnok",
+            "img": "",
+            "class": "bard",
+            "description": "Minden alkalommal, amikor egy hőskárya képessége miatt dobsz a dobókockákkal, adj +1-et az összértékhez!"
+        },
+        {
+            "id": 2,
+            "type": "leader hero",
+            "name": "Igazság Ökle",
+            "img": "",
+            "class": "fighter",
+            "description": "Minden alkalommal, amikor PRÓBATÉTEL miatt dobsz a dobókockákkal, adj +2-t az összértékhez!"
+        },
+        {
+            "id": 3,
+            "type": "leader hero",
+            "name": "Isteni Nyíl",
+            "img": "",
+            "class": "ranger",
+            "description": "Minden alkalommal, amikor azért dobsz a dobókockákkal, mert szörnykártyát TÁMADSZ MEG, adj +1-et az összértékhez!"
+        },
+        {
+            "id": 4,
+            "type": "leader hero",
+            "name": "Védelmező Szarv",
+            "img": "",
+            "class": "guardian",
+            "description": "Minden alkalommal, amikor egy kockadobás sorány módosítókártyát játszol ki, adj +1-et vagy -1-et az összértékhez!"
+        },
+        {
+            "id": 5,
+            "type": "leader hero",
+            "name": "Árnyék Karom",
+            "img": "",
+            "class": "thief",
+            "description": "A körödben körönként egyszer elkölthetsz egy akciópontot, hogy húzz egy kátryát egy másik játékos kézben tartott kártyái közül."
+        },
+        {
+            "id": 6,
+            "type": "leader hero",
+            "name": "Körpenyes Bölcs",
+            "img": "",
+            "class": "wizard",
+            "description": "Minden alkalommal, amikor varázskártyát játszol ki, HÚZZ egy kártyát a főpakliból!"
+        }
+    ]
+}
