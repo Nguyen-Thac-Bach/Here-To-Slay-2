@@ -10,6 +10,9 @@ namespace Components
         private Effect[] _effects;
         private HeroClass _baseHeroClass;
         private HeroClass _currentHeroClass;
+        /// <summary>
+        /// Tracks if the card has been activated. Normally only once per turn
+        /// </summary>
         private bool _isActivatable;
         //TODO: Add ItemCard when implemented
         //private ItemCard _attachedItem;
@@ -30,6 +33,36 @@ namespace Components
             _currentHeroClass = currentHeroClass;
             _isActivatable = isActivatable;
         }
+        #endregion
+        #region Public Methods
+        /// <summary>
+        /// Activates the card. Normally called by GameManager when the card is played
+        /// </summary>
+        /// <remarks>
+        /// GameManager will read the effects of the card and apply them to the game state
+        /// </remarks>
+        public void Activate()
+        {
+            //TODO: Implement GameManager
+            _isActivatable = false;
+        }
+        /// <summary>
+        /// Resets the card to be activatable again. Normally called at the start of a turn
+        /// </summary>
+        public void Reset()
+        {
+            _isActivatable = true;
+        }
+        public void ChangeHeroClass(HeroClass newHeroClass)
+        {
+            _currentHeroClass = newHeroClass;
+        }
+        public void ResetHeroClass()
+        {
+            _currentHeroClass = _baseHeroClass;
+        }
+        //public void AttachItem(ItemCard item)
+        //public void DetachItem()
     }
 }
 

@@ -1,4 +1,5 @@
 
+using Components.Enums;
 using Unity.Collections;
 
 namespace Components {
@@ -9,6 +10,7 @@ namespace Components {
         private string _name;
         private string _description;
         private bool _isViewable;
+        private Deck _deck;
 
         #endregion
 
@@ -18,6 +20,7 @@ namespace Components {
         //TODO: add image field
         public string Description { get => _description; }
         public bool IsViewable { get => _isViewable; }
+        public Deck Deck { get => _deck; }
 
         #endregion
 
@@ -47,6 +50,14 @@ namespace Components {
         public void Hide()
         {
             _isViewable = false;
+        }
+        /// <summary>
+        /// Move the card to the specified deck
+        /// </summary>
+        /// <param name="deck"></param>
+        public void SetDeck(Deck deck)
+        {
+            _deck = deck;
         }
     }
 }

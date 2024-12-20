@@ -1,5 +1,8 @@
 namespace Components.Enums
 {
+    /// <summary>
+    /// Possible places where a card can be
+    /// </summary>
     public enum Deck
     {
         DrawDeck,
