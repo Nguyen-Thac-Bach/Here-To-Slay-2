@@ -59,6 +59,7 @@ namespace Components {
         {
             _deck = deck;
         }
+        #endregion
     }
 }
 

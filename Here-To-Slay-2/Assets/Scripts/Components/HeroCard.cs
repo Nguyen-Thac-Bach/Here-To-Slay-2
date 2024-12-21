@@ -63,6 +63,7 @@ namespace Components
         }
         //public void AttachItem(ItemCard item)
         //public void DetachItem()
+        #endregion
     }
 }
 
