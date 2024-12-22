@@ -2,6 +2,7 @@ using NUnit.Framework;
 using UnityEngine;
 using System.Collections.Generic;
 
+using View;
 public class CardList : MonoBehaviour
 {
     //If debugging is needed, change to public

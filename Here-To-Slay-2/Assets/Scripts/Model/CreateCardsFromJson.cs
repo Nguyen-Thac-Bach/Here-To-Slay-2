@@ -1,5 +1,7 @@
 using UnityEngine;
 using Util;
+
+using View;
 namespace Model
 {
     public class CreateCardsFromJson : MonoBehaviour
