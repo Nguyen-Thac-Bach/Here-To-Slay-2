@@ -1,5 +1,5 @@
 using UnityEngine;
-
+using System.Collections.Generic;
 using Components.Enums;
 namespace Components
 {
@@ -7,7 +7,7 @@ namespace Components
     {
         #region Fields
         private int _minRoll;
-        private Effect[] _effects;
+        private List<Effect> _effects;
         private HeroClass _baseHeroClass;
         private HeroClass _currentHeroClass;
         /// <summary>
@@ -19,13 +19,13 @@ namespace Components
         #endregion
         #region Properties
         public int MinRoll { get => _minRoll; }
-        public Effect[] Effects { get => _effects; }
+        public List<Effect> Effects { get => _effects; }
         public HeroClass BaseHeroClass { get => _baseHeroClass; }
         public HeroClass CurrentHero { get => _currentHeroClass; }
         public bool IsActivatable { get => _isActivatable; }
         #endregion
         #region Constructors
-        public HeroCard(int cardId,string name, string description,bool isViewable, int minRoll, Effect[] effects, HeroClass baseHeroClass, HeroClass currentHeroClass, bool isActivatable) : base(cardId, name, description, isViewable)
+        public HeroCard(int cardId,string name, string description,bool isViewable, int minRoll, List<Effect> effects, HeroClass baseHeroClass, HeroClass currentHeroClass, bool isActivatable) : base(cardId, name, description, isViewable)
         {
             _minRoll = minRoll;
             _effects = effects;

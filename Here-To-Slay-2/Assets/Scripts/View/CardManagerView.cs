@@ -3,12 +3,12 @@ using UnityEngine;
 using System.Collections.Generic;
 
 using View;
-public class CardList : MonoBehaviour
+public class CardManagerView : MonoBehaviour
 {
     //If debugging is needed, change to public
     private List<GameObject> _cardList;
 
-    public List<GameObject> Cards
+    public List<GameObject> CardList
     {
         get { return _cardList; }
     }

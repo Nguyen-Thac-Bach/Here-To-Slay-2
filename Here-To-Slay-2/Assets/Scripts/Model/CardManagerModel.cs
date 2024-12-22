@@ -8,10 +8,10 @@ namespace Model
     /// <summary>
     /// Singleton class that provides methods to access and move cards between decks
     /// </summary>
-    public class CardManagerModel
+    public sealed class CardManagerModel
     {
         #region Fields
-        private static CardManagerModel _instance;
+        private static readonly CardManagerModel _instance = new CardManagerModel();
         /// <summary>
         /// Stores all the cards in the game
         /// </summary>
@@ -26,18 +26,15 @@ namespace Model
         {
             get
             {
-                if (_instance == null)
-                {
-                    _instance = new CardManagerModel();
-                }
                 return _instance;
             }
         }
         #endregion
         #region Constructors
-        public CardManagerModel()
+  
+        private CardManagerModel()
         {
-
+            _cards = new List<BaseCard>();
         }
         #endregion
         #region Public methods
@@ -49,6 +46,11 @@ namespace Model
         public BaseCard GetCard(int cardID)
         {
             return _cards.Find(card => card.CardId == cardID);
+        }
+
+        public List<BaseCard> GetCards()
+        {
+            return _cards;
         }
         public void MoveCard(int cardID, Deck destination)
         {
