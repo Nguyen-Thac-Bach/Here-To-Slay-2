@@ -15,6 +15,7 @@ public class HeroCardUI : MonoBehaviour
     private string _heroClass;
     private string _heroDescription;
     private int _rollRequirement;
+    private bool _dataReceived;
 
     //specific children of the border that contain the text components
     /// <summary>
@@ -41,14 +42,7 @@ public class HeroCardUI : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        //get the border and text components
-        _border = GetBorder(transform);
-        Debug.Log($"HeroCardUI: {_border.name}");
-        _textComponents = GetTextComponents(_border);
-        foreach (Transform textComponent in _textComponents)
-        {
-            Debug.Log($"HeroCardUI: text component names: {textComponent.name}");
-        }
+
     }
 
     /// <summary>
@@ -56,14 +50,32 @@ public class HeroCardUI : MonoBehaviour
     /// </summary>
     void Update()
     {
-        Debug.Log("HeroCardUI: Starting SetData()");
-        SetData();
-        Debug.Log($"HeroCardUI: Data set for card: {HeroName}");
-        this.enabled = false;
+        if (_dataReceived)
+        {
+            this.enabled = false;
+        }
     }
 
-
-
+    #region Public methods
+    /// <summary>
+    /// Public method to set the data of the hero card
+    /// </summary>
+    /// <param name="heroName"></param>
+    /// <param name="heroClass"></param>
+    /// <param name="heroDescription"></param>
+    /// <param name="rollRequirement"></param>
+    public void SetHeroData(string heroName, string heroClass, string heroDescription, int rollRequirement)
+    {
+        _heroName = heroName;
+        _heroClass = heroClass;
+        _heroDescription = heroDescription;
+        _rollRequirement = rollRequirement;
+        Debug.Log($"HeroCardUI: SetHeroData: Hero name: {heroName}, Hero class: {heroClass}, Hero description: {heroDescription}, Roll requirement: {rollRequirement}");
+        SetData();
+        _dataReceived = true;
+    }
+    #endregion
+    #region Private methods
     private Transform GetBorder(Transform parent)
     {
         List<Transform> children = new List<Transform>();
@@ -98,16 +110,33 @@ public class HeroCardUI : MonoBehaviour
         return textComponents;
     }
     /// <summary>
-    /// sets the data of the UI elements
+    /// Private method that sets the data of the UI elements
     /// </summary>
     private void SetData()
     {
-        
+        GetComponents();
         _textComponents[0].GetComponent<TextMeshProUGUI>().text = HeroName;
         _textComponents[1].GetComponent<TextMeshProUGUI>().text = $"{_cardTypePrefix} {HeroClass}";
         _textComponents[2].GetComponent<TextMeshProUGUI>().text = HeroDescription;
         _textComponents[3].GetComponent<TextMeshProUGUI>().text = RollRequirement;
-
+        Debug.Log("HeroCardUI: SetData: Data set");
 
     }
+    /// <summary>
+    /// Private method that gets the components of the hero card
+    /// Needed because other Monobehaviour objects might call SetHeroData before the components are initialized
+    /// </summary>
+    private void GetComponents()
+    {
+        _dataReceived = false;
+        //get the border and text components
+        _border = GetBorder(transform);
+        //Debug.Log($"HeroCardUI: {_border.name}");
+        _textComponents = GetTextComponents(_border);
+        //foreach (Transform textComponent in _textComponents)
+        //{
+        //    Debug.Log($"HeroCardUI: text component names: {textComponent.name}");
+        //}
+    }
+    #endregion
 }
