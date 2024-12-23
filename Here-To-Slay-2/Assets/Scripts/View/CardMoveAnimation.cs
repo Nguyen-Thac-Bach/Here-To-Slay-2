@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 namespace View
 {
-    public class MoveCardUI : MonoBehaviour
+    public class CardMoveAnimation : MonoBehaviour
     {
         [SerializeField]
         float timerValue = 10.0f;
