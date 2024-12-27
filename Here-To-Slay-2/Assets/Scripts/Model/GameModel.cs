@@ -31,8 +31,8 @@ namespace Model
         #region Public Methods
         public void MoveCard(int cardID, Deck destination)
         {
-            GameState.Instance.MoveCard(cardID, destination);
-            CardMoved?.Invoke(this, new CardMovedEventArgs() { CardId = cardID, NewPosition = destination});
+            Deck origin = GameState.Instance.MoveCard(cardID, destination);
+            CardMoved?.Invoke(this, new CardMovedEventArgs() {Origin = origin , CardId = cardID, NewPosition = destination});
         }
         #endregion
 

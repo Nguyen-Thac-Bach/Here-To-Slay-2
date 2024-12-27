@@ -9,6 +9,7 @@ namespace Components.CustomEventArgs
 {
     public class CardMovedEventArgs : EventArgs
     {
+        public Deck Origin { get; set; }
         public int CardId { get; set; }
         public Deck NewPosition { get; set; }
     }

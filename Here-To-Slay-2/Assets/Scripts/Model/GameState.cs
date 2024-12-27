@@ -19,6 +19,9 @@ namespace Model
         /// If performance is a concern, consider using a different data structure, such as a dictionary
         /// </remarks>
         private List<BaseCard> _cards;
+        private const int _maxCardsInHand = 8;
+        private const int _maxCardsInField = 5;
+        private const int _maxCardsInAttackableMonsters = 3;
         private const int _maxActions = 3;
         private Player _currentPlayer;
         private int _remainingActions;
@@ -55,10 +58,28 @@ namespace Model
         {
             return _cards;
         }
-        public void MoveCard(int cardID, Deck destination)
+        public List<BaseCard> GetCardsFromDeck(Deck deck)
         {
-            _cards.Find(card => card.CardId == cardID).SetDeck(destination);
-            Debug.Log(cardID + " moved to " + destination.ToString());
+            return _cards.FindAll(card => card.Deck == deck);
+        }
+        public Deck MoveCard(int cardID, Deck destination)
+        {
+            BaseCard card = _cards.Find(card => card.CardId == cardID);
+
+            if (DeckNotFull(destination))
+            {
+                Deck origin = card.Deck;
+                card.SetDeck(destination);
+                RepositionCards(origin);
+                Debug.Log(cardID + " moved to " + destination.ToString());
+                return origin;
+            }
+            else {                 
+                Debug.Log("Deck is full");
+                return Deck.None;
+            }
+            
+            
         }
 
         public Player GetCurrentPlayer()
@@ -100,7 +121,40 @@ namespace Model
             }
         }
         #endregion
-
+        #region Private methods
+        private bool DeckNotFull(Deck deck)
+        {
+            switch (deck)
+            {
+                case Deck.Player1Hand:
+                    return GetCardsFromDeck(deck).Count < _maxCardsInHand;
+                case Deck.Player2Hand:
+                    return GetCardsFromDeck(deck).Count < _maxCardsInHand;
+                case Deck.Player1Field:
+                    return GetCardsFromDeck(deck).Count < _maxCardsInField;
+                case Deck.Player2Field:
+                    return GetCardsFromDeck(deck).Count < _maxCardsInField;
+                case Deck.AttackableMonsters:
+                    return GetCardsFromDeck(deck).Count < _maxCardsInAttackableMonsters;
+                //other decks don't have a limit
+                default:
+                    return true;
+            }
+        }
+        /// <summary>
+        /// Adjusts the CardPosition value of the cards in the given deck after a card has been moved from it
+        /// </summary>
+        /// <param name="origin">Which deck needs reindexing</param>
+        /// <remarks> only relevant for decks with a limit on the number of cards: hand, field, attackableMonsters</remarks>
+        private void RepositionCards(Deck origin)
+        {
+            List<BaseCard> cards = GetCardsFromDeck(origin);
+            for (int i = 0; i < cards.Count; i++)
+            {
+                cards[i].SetCardPosition(i);
+            }
+        }
+        #endregion
     }
 }
 

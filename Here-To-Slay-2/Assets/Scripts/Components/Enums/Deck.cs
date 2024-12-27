@@ -8,11 +8,12 @@ namespace Components.Enums
         DrawDeck,
         DiscardDeck,
         MonsterDeck,
-        AttackAbleMonsters,
+        AttackableMonsters,
         Player1Hand,
         Player1Field,
         Player2Hand,
-        Player2Field
+        Player2Field,
+        None
         //todo: add for player3,4 if implemented
     }
 }

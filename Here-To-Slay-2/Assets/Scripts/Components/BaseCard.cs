@@ -11,6 +11,7 @@ namespace Components {
         private string _description;
         private bool _isViewable;
         private Deck _deck;
+        private int _cardPosition;
 
         #endregion
 
@@ -21,6 +22,10 @@ namespace Components {
         public string Description { get => _description; }
         public bool IsViewable { get => _isViewable; }
         public Deck Deck { get => _deck; }
+        /// <summary>
+        /// Relevant for cards in the player's hand, field; attackable monsters
+        /// </summary>
+        public int CardPosition { get => _cardPosition; }
 
         #endregion
 
@@ -58,6 +63,14 @@ namespace Components {
         public void SetDeck(Deck deck)
         {
             _deck = deck;
+        }
+        /// <summary>
+        /// Moves the card to the specified position within the deck
+        /// </summary>
+        /// <param name="cardPosition"></param>
+        public void SetCardPosition(int cardPosition)
+        {
+            _cardPosition = cardPosition;
         }
         #endregion
     }
