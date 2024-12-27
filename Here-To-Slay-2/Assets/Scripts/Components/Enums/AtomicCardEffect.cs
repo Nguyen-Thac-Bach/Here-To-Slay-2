@@ -14,9 +14,6 @@ namespace Components.Enums
     /// TODO: Implement AtomicCardCondition enum
     public enum AtomicCardEffect
     {
-
-        //neither
-        ReplenishAttackableMonsters,
         //actorRelevant
         Draw,
         //needsChoosingCard

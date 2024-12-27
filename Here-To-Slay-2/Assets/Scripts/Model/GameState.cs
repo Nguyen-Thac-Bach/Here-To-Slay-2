@@ -22,6 +22,7 @@ namespace Model
         private const int _maxCardsInHand = 8;
         private const int _maxCardsInField = 5;
         private const int _maxCardsInAttackableMonsters = 3;
+        private const int _maxCardsInSlainMonsters = 3;
         private const int _maxActions = 3;
         private Player _currentPlayer;
         private int _remainingActions;
@@ -61,6 +62,10 @@ namespace Model
         public List<BaseCard> GetCardsFromDeck(Deck deck)
         {
             return _cards.FindAll(card => card.Deck == deck);
+        }
+        public BaseCard GetTopCardFromDrawDeck()
+        {
+            return GetCardsFromDeck(Deck.DrawDeck)[0];
         }
         /// <summary>
         /// Moves card in the persistent data structure
@@ -168,7 +173,12 @@ namespace Model
                     return GetCardsFromDeck(deck).Count < _maxCardsInField;
                 case Deck.AttackableMonsters:
                     return GetCardsFromDeck(deck).Count < _maxCardsInAttackableMonsters;
-                //other decks don't have a limit
+                case Deck.Player1SlainMonsters:
+                    return GetCardsFromDeck(deck).Count < _maxCardsInSlainMonsters;
+                case Deck.Player2SlainMonsters:
+                    return GetCardsFromDeck(deck).Count < _maxCardsInSlainMonsters;
+
+                    //other decks don't have a limit
                 default:
                     return true;
             }
@@ -208,6 +218,12 @@ namespace Model
                     card.SetCardPosition(GetCardsFromDeck(destination).Count - 1);
                     break;
                 case Deck.AttackableMonsters:
+                    card.SetCardPosition(GetCardsFromDeck(destination).Count - 1);
+                    break;
+                case Deck.Player1SlainMonsters:
+                    card.SetCardPosition(GetCardsFromDeck(destination).Count - 1);
+                    break;
+                case Deck.Player2SlainMonsters:
                     card.SetCardPosition(GetCardsFromDeck(destination).Count - 1);
                     break;
                 default:
