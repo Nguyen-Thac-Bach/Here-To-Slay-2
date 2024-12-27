@@ -11,6 +11,10 @@ namespace View {
     {
 
         #region Fields
+        /// <summary>
+        /// needed for GameStateUI to find the card easily
+        /// </summary>
+        private int _id;
         private string _heroName;
         private string _heroClass;
         private string _heroDescription;
@@ -29,6 +33,10 @@ namespace View {
 
         //
         //might need to change to private later
+        /// <summary>
+        /// needed for GameStateUI to find the card easily
+        /// </summary>
+        public int Id { get => _id; }
         public string HeroName { get => _heroName; }
         public string HeroClass { get => _heroClass; }
         //public string ClassImagePath;
@@ -64,8 +72,9 @@ namespace View {
         /// <param name="heroClass"></param>
         /// <param name="heroDescription"></param>
         /// <param name="rollRequirement"></param>
-        public void SetHeroData(string heroName, string heroClass, string heroDescription, int rollRequirement)
+        public void SetHeroData(int id, string heroName, string heroClass, string heroDescription, int rollRequirement)
         {
+            _id = id;
             _heroName = heroName;
             _heroClass = heroClass;
             _heroDescription = heroDescription;

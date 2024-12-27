@@ -5,9 +5,9 @@ using System.Collections.Generic;
 namespace View
 {
     /// <summary>
-    /// Tracks the OBJECTS representing the cards in the game
+    /// Tracks the OBJECTS representing the cards in the game. May also be used to track other game objects.
     /// </summary>
-    public class CardManagerView : MonoBehaviour
+    public class GameStateUI : MonoBehaviour
     {
         //If debugging is needed, change to public
         private List<GameObject> _cardList;
@@ -26,6 +26,18 @@ namespace View
         {
             _cardList.Add(card);
             Debug.Log($"CardList: Added card: {card.GetComponent<HeroCardUI>().HeroName}");
+        }
+
+        public GameObject GetCard(int id)
+        {
+            foreach (GameObject card in _cardList)
+            {
+                if (card.GetComponent<HeroCardUI>().Id == id)
+                {
+                    return card;
+                }
+            }
+            throw new System.Exception($"GameStateUI: GetCard: Card with id {id} not found");
         }
 
 

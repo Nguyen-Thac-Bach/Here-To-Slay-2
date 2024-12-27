@@ -14,7 +14,7 @@ namespace Model
         /// <summary>
         /// The object that will provide access to all cards
         /// </summary>
-        public GameObject CardList;
+        public GameObject ViewManager;
         public GameObject CardParent;
         public GameObject HeroCardPrefab;
         public TextAsset HeroJSONFile;
@@ -59,10 +59,10 @@ namespace Model
                 //2. Create the card in the view
                 GameObject HeroCardObject = Instantiate(HeroCardPrefab, CardParent.transform);
                 HeroCardObject.name = hero.name;
-                HeroCardObject.GetComponent<HeroCardUI>().SetHeroData(hero.name, hero.heroClass, hero.description, hero.minRoll);
+                HeroCardObject.GetComponent<HeroCardUI>().SetHeroData(hero.id, hero.name, hero.heroClass, hero.description, hero.minRoll);
                 Debug.Log($"CreateCardsFromJson: Created hero card: {hero.name}");
-                CardList.GetComponent<CardManagerView>().AddCard(HeroCardObject);
-                Debug.Log("CreateCardsFromJson: Added hero card to CardList");
+                ViewManager.GetComponent<GameStateUI>().AddCard(HeroCardObject);
+                Debug.Log("CreateCardsFromJson: Added hero card to GameStateUI");
             }
 
         }

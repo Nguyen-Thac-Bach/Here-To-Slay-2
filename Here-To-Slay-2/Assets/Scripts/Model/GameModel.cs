@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 
 using Components.CustomEventArgs;
+using Components.Enums;
 
 namespace Model
 {
@@ -15,6 +16,9 @@ namespace Model
     /// <remarks>Order of script execution (check Script Execution Order settings): CreateCardsFromJson (once) -> GameModel->GameView </remarks>
     public class GameModel:MonoBehaviour
     {
+        #region Events
+        public event EventHandler<CardMovedEventArgs> CardMoved;
+        #endregion
         private CreateCardsFromJson _createCardsFromJson;
         
         private void Start()
@@ -24,10 +28,19 @@ namespace Model
             _createCardsFromJson.CardsCreated += OnCardsCreated;
 
         }
+        #region Public Methods
+        public void MoveCard(int cardID, Deck destination)
+        {
+            GameState.Instance.MoveCard(cardID, destination);
+            CardMoved?.Invoke(this, new CardMovedEventArgs() { CardId = cardID, NewPosition = destination});
+        }
+        #endregion
 
+        #region Event Handlers
         private void OnCardsCreated(object sender, CardsCreatedEventArgs e)
         {
             Debug.Log("GameModel: OnCardsCreated: Cards created event received, probably from CreateCardsFromJson");
         }
+        #endregion
     }
 }
