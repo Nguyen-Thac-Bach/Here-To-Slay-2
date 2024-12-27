@@ -736,6 +736,7 @@ GameObject:
   m_Component:
   - component: {fileID: 784761810}
   - component: {fileID: 784761811}
+  - component: {fileID: 784761812}
   m_Layer: 0
   m_Name: ModelManager
   m_TagString: Untagged
@@ -774,6 +775,18 @@ MonoBehaviour:
   CardParent: {fileID: 908479190}
   HeroCardPrefab: {fileID: 2770946716801852076, guid: fb9a6f2436f859b4f82a988f3a3c335a, type: 3}
   HeroJSONFile: {fileID: 4900000, guid: 843112a948853c048835a0ad32f6dc0b, type: 3}
+--- !u!114 &784761812
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 784761809}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66942b94894665f4fae5d44debfafe6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &908479190
 GameObject:
   m_ObjectHideFlags: 0

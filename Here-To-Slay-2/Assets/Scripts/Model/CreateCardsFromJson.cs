@@ -5,6 +5,7 @@ using Components;
 using View;
 using System.Collections.Generic;
 using Components.Enums;
+using Components.CustomEventArgs;
 namespace Model
 {
     public class CreateCardsFromJson : MonoBehaviour
@@ -18,7 +19,7 @@ namespace Model
         public GameObject HeroCardPrefab;
         public TextAsset HeroJSONFile;
 
-
+        public event EventHandler<CardsCreatedEventArgs> CardsCreated;
         private void Start()
         {
             CreateHeroes();
@@ -28,6 +29,13 @@ namespace Model
             {
                 Debug.Log($"CreateCardsFromJson: Start: Card: {card.Name} is in deck: {card.Deck}");
             }*/
+            
+        }
+        private void Update()
+        {
+            //Only invoke event in update so that other scripts have time to subscribe to it
+            Debug.Log("CreateCardsFromJson: Update: Invoking CardsCreated event");
+            CardsCreated?.Invoke(this, new CardsCreatedEventArgs());
             this.enabled = false;
         }
 
@@ -45,7 +53,7 @@ namespace Model
                     Enum.TryParse<HeroClass>(hero.heroClass, out HeroClass baseHeroClass) ? baseHeroClass : HeroClass.none,
                     Enum.TryParse<HeroClass>(hero.heroClass, out HeroClass currentHeroClass) ? currentHeroClass : HeroClass.none,
                     false);
-                CardManagerModel.Instance.AddCard(heroCard);
+                GameState.Instance.AddCard(heroCard);
                 Debug.Log($"CreateCardsFromJson: Added hero card: {hero.name} to CardManagerModel");
 
                 //2. Create the card in the view
