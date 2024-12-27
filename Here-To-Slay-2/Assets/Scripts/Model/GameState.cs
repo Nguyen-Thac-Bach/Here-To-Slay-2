@@ -74,11 +74,17 @@ namespace Model
 
             if (DeckNotFull(destination))
             {
+                //1. Move card to destination
                 Deck origin = card.Deck;
                 card.SetDeck(destination);
                 int oldCardPosition = card.CardPosition;
                 SetCardPosition(card, destination);
-                RepositionCards(origin, oldCardPosition);
+                //2. Reposition cards in the origin deck if needed
+                if (IsDeckWithLimit(origin))
+                {
+                    RepositionCards(origin, oldCardPosition);
+                }
+                
                 Debug.Log(cardID + " moved to " + destination.ToString());
                 return origin;
             }
@@ -128,6 +134,24 @@ namespace Model
                 
             }
         }
+
+        public bool IsDeckWithLimit(Deck deck) {             
+            switch (deck)
+            {
+                case Deck.Player1Hand:
+                    return true;
+                case Deck.Player2Hand:
+                    return true;
+                case Deck.Player1Field:
+                    return true;
+                case Deck.Player2Field:
+                    return true;
+                case Deck.AttackableMonsters:
+                    return true;
+                default:
+                    return false;
+            }
+        }
         #endregion
         #region Private methods
         private bool DeckNotFull(Deck deck)
@@ -156,11 +180,14 @@ namespace Model
         /// <remarks> only relevant for decks with a limit on the number of cards: hand, field, attackableMonsters</remarks>
         private void RepositionCards(Deck origin, int fromWhichPosition)
         {
+            Debug.Log($"GameState: RepositionCards: Repositioning cards in {origin} from position {fromWhichPosition}");
             List<BaseCard> cards = GetCardsFromDeck(origin);
-            int cardsToReposition = cards.Count - 1 - fromWhichPosition;
+            int cardsToReposition = cards.Count - fromWhichPosition;
+            Debug.Log($"GameState: RepositionCards: Cards to reposition: {cardsToReposition}");
             for (int i = 0; i < cardsToReposition; i++)
             {
                 cards[i + fromWhichPosition].SetCardPosition(i + fromWhichPosition);
+                Debug.Log($"GameState: RepositionCards: Card {cards[i + fromWhichPosition].CardId} 's position value set to {i + fromWhichPosition}");
             }
         }
 

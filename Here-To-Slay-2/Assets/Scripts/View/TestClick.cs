@@ -10,8 +10,8 @@ namespace View
     /// </summary>
     public class TestClick : MonoBehaviour
     {
-        public int CardId=21;
-        public Deck Deck=Deck.AttackableMonsters;
+        public int CardId;
+        public Deck Deck;
         public Button Button;
 
         public event EventHandler<TestButtonClickedEventArgs> TestButtonClicked;
@@ -19,6 +19,8 @@ namespace View
         void Start()
         {
             Button.onClick.AddListener(OnTestButtonClicked);
+            CardId = 21;
+            Deck = Deck.AttackableMonsters;
         }
 
         // Update is called once per frame

@@ -70,35 +70,49 @@ namespace View
         private void OnCardMoved(object sender, CardMovedEventArgs e)
         {
             GameObject card = GetComponent<GameStateUI>().GetCard(e.CardId);
-            //for decks with no limit size
+            //1. move the card to the new deck
+            //for deck with no limit size
             if (e.NewPosition == -1)
             {
                 card.transform.SetParent(GetDeckObject(e.NewDeck).transform);
                 Debug.Log($"GameView: OnCardMoved: Card {e.CardId} moved to {e.NewDeck}");
             }
+            //for deck with a limit size
             else
             {
-                //for decks with a limit size
-                //move card to the new position
+                
                 GameObject deckObject = GetDeckObject(e.NewDeck);
                 GameObject cardPositionObject = deckObject.transform.GetChild(e.NewPosition).gameObject;
                 card.transform.SetParent(cardPositionObject.transform);
                 Debug.Log($"GameView: OnCardMoved: Card {e.CardId} moved to {e.NewDeck}: {e.NewPosition}");
 
-
             }
-            //reposition the other cards in the deck
+
+
+            //reposition the other cards in the original deck if needed
+            if (e.OriginNeedsAdjustment)
+            {
+                AdjustOriginDeckUI(e);
+            }
+
+
+        }
+
+        private void AdjustOriginDeckUI(CardMovedEventArgs e)
+        {
+            Debug.Log($"GameView: OnCardMoved: Readjusting origin deck");
+            Debug.Log($"GameView: OnCardMoved: CardMovedEventArgs values:");
+            Debug.Log($"GameView: OnCardMoved: IdsToAdjust: {string.Join(",", e.IdsToAdjust)}");
+            Debug.Log($"GameView: OnCardMoved: AdjustedPositions: {string.Join(",", e.AdjustedPositions)}");
             for (int i = 0; i < e.AdjustedPositions.Count(); i++)
             {
                 int id = e.IdsToAdjust[i];
                 GameObject cardToReposition = GetComponent<GameStateUI>().GetCard(id);
-                GameObject deckObject = GetDeckObject(e.NewDeck);
+                GameObject deckObject = GetDeckObject(e.Origin);
                 GameObject cardPositionObject = deckObject.transform.GetChild(e.AdjustedPositions[i]).gameObject;
                 cardToReposition.transform.SetParent(cardPositionObject.transform);
-                Debug.Log($"GameView: OnCardMoved: Card {id} repositioned to {e.NewDeck}: {e.AdjustedPositions[i]}");
+                Debug.Log($"GameView: OnCardMoved: Card {id} repositioned to {e.Origin}: {e.AdjustedPositions[i]}");
             }
-
-
         }
 
         private void OnTestButtonClicked(object sender, TestButtonClickedEventArgs e)
