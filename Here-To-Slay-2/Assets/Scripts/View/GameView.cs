@@ -33,7 +33,7 @@ namespace View
 
 
         #region Events
-        public event EventHandler<TestButtonClickedEventArgs> TestButtonClicked;
+        //public event EventHandler<TestButtonClickedEventArgs> TestButtonClicked;
         #endregion
         private void Start()
         {
@@ -53,7 +53,7 @@ namespace View
                     return DiscardDeck;
                 case Deck.MonsterDeck:
                     return MonsterDeck;
-                case Deck.AttackAbleMonsters:
+                case Deck.AttackableMonsters:
                     return AttackableMonsters;
                 case Deck.Player1Hand:
                     return Player1Hand;
