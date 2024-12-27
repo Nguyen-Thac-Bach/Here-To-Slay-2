@@ -11,6 +11,11 @@ namespace Components.CustomEventArgs
     {
         public Deck Origin { get; set; }
         public int CardId { get; set; }
-        public Deck NewPosition { get; set; }
+        public Deck NewDeck { get; set; }
+        public int NewPosition { get; set; }
+
+        public bool OriginNeedsAdjustment { get; set; }
+        public List<int> IdsToAdjust { get; set; }
+        public List<int> AdjustedPositions { get; set; }
     }
 }

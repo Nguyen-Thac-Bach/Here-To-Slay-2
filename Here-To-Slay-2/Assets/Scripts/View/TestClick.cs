@@ -10,8 +10,8 @@ namespace View
     /// </summary>
     public class TestClick : MonoBehaviour
     {
-        public int CardId;
-        public Deck Deck;
+        public int CardId=21;
+        public Deck Deck=Deck.AttackableMonsters;
         public Button Button;
 
         public event EventHandler<TestButtonClickedEventArgs> TestButtonClicked;
@@ -29,6 +29,7 @@ namespace View
         void OnTestButtonClicked()
         {
             TestButtonClicked?.Invoke(Deck, new TestButtonClickedEventArgs { CardId = CardId, Deck = Deck });
+            CardId++;
             Debug.Log("TestClick: TestButtonClicked: Button clicked");
         }
     }

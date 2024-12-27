@@ -49,7 +49,8 @@ namespace Model
                 //TODO: When effects are implemented, add them to the card (json, constructors etc.
                 HeroCard heroCard = new HeroCard(
                     hero.id, hero.name, hero.description,
-                    false, hero.minRoll, new List<Effect>(), 
+                    false, Deck.DrawDeck,
+                    hero.minRoll, new List<Effect>(), 
                     Enum.TryParse<HeroClass>(hero.heroClass, out HeroClass baseHeroClass) ? baseHeroClass : HeroClass.none,
                     Enum.TryParse<HeroClass>(hero.heroClass, out HeroClass currentHeroClass) ? currentHeroClass : HeroClass.none,
                     false);

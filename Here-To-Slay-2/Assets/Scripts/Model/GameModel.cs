@@ -32,7 +32,19 @@ namespace Model
         public void MoveCard(int cardID, Deck destination)
         {
             Deck origin = GameState.Instance.MoveCard(cardID, destination);
-            CardMoved?.Invoke(this, new CardMovedEventArgs() {Origin = origin , CardId = cardID, NewPosition = destination});
+            if(origin == Deck.None)
+            {
+                Debug.Log($"GameModel: MoveCard: Could not move card {cardID} to {destination}");
+                return;
+            }
+            int newPosition = GameState.Instance.GetCard(cardID).CardPosition;
+            if(origin in new List<Deck>() { Deck.Player1Hand, Deck.Player2Hand, Deck.Player1Field, Deck.Player2Field, Deck.AttackableMonsters})
+                       {
+                GameState.Instance.AdjustHandPositions(origin);
+            })
+            List<int> idsToAdjust = GameState.Instance.GetCardsFromDeck(destination).Select(card => card.CardId).ToList();
+            List<int> adjustedPositions = GameState.Instance.GetCardsFromDeck(destination).Select(card => card.CardPosition).ToList();
+            CardMoved?.Invoke(this, new CardMovedEventArgs() {Origin = origin , CardId = cardID, NewDeck = destination, NewPosition = newPosition, AdjustedPositions = adjustedPositions});
         }
         #endregion
 

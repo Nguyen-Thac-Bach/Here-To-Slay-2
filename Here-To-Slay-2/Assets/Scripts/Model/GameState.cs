@@ -62,6 +62,12 @@ namespace Model
         {
             return _cards.FindAll(card => card.Deck == deck);
         }
+        /// <summary>
+        /// Moves card in the persistent data structure
+        /// </summary>
+        /// <param name="cardID"></param>
+        /// <param name="destination"></param>
+        /// <returns>None if unsuccessful, otherwise the original deck the card belonged to</returns>
         public Deck MoveCard(int cardID, Deck destination)
         {
             BaseCard card = _cards.Find(card => card.CardId == cardID);
@@ -70,7 +76,9 @@ namespace Model
             {
                 Deck origin = card.Deck;
                 card.SetDeck(destination);
-                RepositionCards(origin);
+                int oldCardPosition = card.CardPosition;
+                SetCardPosition(card, destination);
+                RepositionCards(origin, oldCardPosition);
                 Debug.Log(cardID + " moved to " + destination.ToString());
                 return origin;
             }
@@ -146,12 +154,38 @@ namespace Model
         /// </summary>
         /// <param name="origin">Which deck needs reindexing</param>
         /// <remarks> only relevant for decks with a limit on the number of cards: hand, field, attackableMonsters</remarks>
-        private void RepositionCards(Deck origin)
+        private void RepositionCards(Deck origin, int fromWhichPosition)
         {
             List<BaseCard> cards = GetCardsFromDeck(origin);
-            for (int i = 0; i < cards.Count; i++)
+            int cardsToReposition = cards.Count - 1 - fromWhichPosition;
+            for (int i = 0; i < cardsToReposition; i++)
             {
-                cards[i].SetCardPosition(i);
+                cards[i + fromWhichPosition].SetCardPosition(i + fromWhichPosition);
+            }
+        }
+
+        private void SetCardPosition(BaseCard card, Deck destination)
+        {
+            switch (destination)
+            {
+                case Deck.Player1Hand:
+                    card.SetCardPosition(GetCardsFromDeck(destination).Count-1);
+                    break;
+                case Deck.Player2Hand:
+                    card.SetCardPosition(GetCardsFromDeck(destination).Count - 1);
+                    break;
+                case Deck.Player1Field:
+                    card.SetCardPosition(GetCardsFromDeck(destination).Count - 1);
+                    break;
+                case Deck.Player2Field:
+                    card.SetCardPosition(GetCardsFromDeck(destination).Count - 1);
+                    break;
+                case Deck.AttackableMonsters:
+                    card.SetCardPosition(GetCardsFromDeck(destination).Count - 1);
+                    break;
+                default:
+                    card.SetCardPosition(-1);
+                    break;
             }
         }
         #endregion

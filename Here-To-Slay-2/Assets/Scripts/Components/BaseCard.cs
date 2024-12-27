@@ -30,13 +30,14 @@ namespace Components {
         #endregion
 
         #region Constructors
-        public BaseCard(int cardId, string name, string description, bool isViewable)
+        public BaseCard(int cardId, string name, string description, bool isViewable, Deck deck)
         {
             _cardId = cardId;
             _name = name;
             _description = description;
             _isViewable = isViewable;
-
+            _deck = deck;
+            _cardPosition = -1;
         }
         #endregion
 
@@ -67,7 +68,7 @@ namespace Components {
         /// <summary>
         /// Moves the card to the specified position within the deck
         /// </summary>
-        /// <param name="cardPosition"></param>
+        /// <param name="cardPosition">-1 if the deck it is in has no limits to respect</param>
         public void SetCardPosition(int cardPosition)
         {
             _cardPosition = cardPosition;
