@@ -33,8 +33,10 @@ namespace View
         //test button
         public GameObject TestButton;
         public GameObject DrawCardButton;
+        public GameObject EndTurnButton;
         private GameModel _gameModel;
         private GameState _gameState;
+        private GameStateUI _gameStateUI;
 
 
         #region Events
@@ -45,9 +47,13 @@ namespace View
             _gameModel = ModelManager.GetComponent<GameModel>();
             _gameState = _gameModel._gameState;
             _gameState.CardMoved += OnCardMoved;
-            TestButton.GetComponent<TestClick>().TestButtonClicked += OnTestButtonClicked;
-            DrawCardButton
+            _gameState.PlayerChanged += OnPlayerChanged;
+            _gameState.ActionUsed += OnActionUsed;
 
+            _gameStateUI = GetComponent<GameStateUI>();
+            TestButton.GetComponent<TestClick>().TestButtonClicked += OnTestButtonClicked;
+            DrawCardButton.GetComponent<DrawCardButtonClick>().DrawCardButtonClicked += OnDrawCardButtonClicked;
+            EndTurnButton.GetComponent<EndTurnButtonClick>().EndTurnButtonClicked += OnEndTurnButtonClicked;
         }
 
         private GameObject GetDeckObject(Deck deck)
@@ -80,7 +86,7 @@ namespace View
         }
         private void OnCardMoved(object sender, CardMovedEventArgs e)
         {
-            GameObject card = GetComponent<GameStateUI>().GetCard(e.CardId);
+            GameObject card = _gameStateUI.GetCard(e.CardId);
             //1. move the card to the new deck
             //for deck with no limit size
             if (e.NewPosition == -1)
@@ -108,6 +114,29 @@ namespace View
 
 
         }
+        private void OnDrawCardButtonClicked(object sender, EventArgs e)
+        {
+            _gameModel.ExecuteAtomicCardEffect(AtomicCardEffect.Draw, _gameState.GetCurrentPlayer());
+            Debug.Log($"GameView: OnDrawCardButtonClicked: Draw card button clicked, player {_gameState.GetCurrentPlayer()} drew a card");
+        }
+
+        private void OnEndTurnButtonClicked(object sender, EventArgs e)
+        {
+            _gameModel.EndTurn();
+            Debug.Log($"GameView: OnEndTurnButtonClicked: End turn button clicked");
+        }
+
+        private void OnPlayerChanged(object sender, PlayerChangedEventArgs e)
+        {
+            _gameStateUI.SetCurrentPlayerUI(e.Player);
+            Debug.Log($"GameView: OnPlayerChanged: Player changed to {e.Player}");
+        }
+
+        private void OnActionUsed(object sender, ActionUsedEventArgs e)
+        {
+            _gameStateUI.SetRemainingActionsUI(e.RemainingActions);
+            Debug.Log($"GameView: OnActionUsed: Remaining actions: {e.RemainingActions}");
+        }
 
         private void AdjustOriginDeckUI(CardMovedEventArgs e)
         {
@@ -118,7 +147,7 @@ namespace View
             for (int i = 0; i < e.AdjustedPositions.Count(); i++)
             {
                 int id = e.IdsToAdjust[i];
-                GameObject cardToReposition = GetComponent<GameStateUI>().GetCard(id);
+                GameObject cardToReposition = _gameStateUI.GetCard(id);
                 GameObject deckObject = GetDeckObject(e.Origin);
                 GameObject cardPositionObject = deckObject.transform.GetChild(e.AdjustedPositions[i]).gameObject;
                 cardToReposition.transform.SetParent(cardPositionObject.transform);

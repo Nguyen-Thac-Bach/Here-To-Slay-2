@@ -32,6 +32,8 @@ namespace Model
         #endregion
         #region Events
         public event EventHandler<CardMovedEventArgs> CardMoved;
+        public event EventHandler<PlayerChangedEventArgs> PlayerChanged;
+        public event EventHandler<ActionUsedEventArgs> ActionUsed;
         #endregion
         #region Properties
         public static GameState Instance
@@ -52,9 +54,10 @@ namespace Model
         #region Public methods
         public void NewGame()
         {
-            _cards.Clear();
             _currentPlayer = Player.Player1;
+            PlayerChanged?.Invoke(this, new PlayerChangedEventArgs() { Player = _currentPlayer });
             RefreshActions();
+            Debug.Log("GameState: NewGame: New game started");
         }
         public void EndTurn()
         {
@@ -133,6 +136,7 @@ namespace Model
         public void SetToNextPlayer()
         {
             _currentPlayer = _currentPlayer == Player.Player1 ? Player.Player2 : Player.Player1;
+            PlayerChanged?.Invoke(this, new PlayerChangedEventArgs() { Player = _currentPlayer });  
             Debug.Log("Current player: " + _currentPlayer.ToString());
         }
 
@@ -146,6 +150,7 @@ namespace Model
         public void RefreshActions()
         {
             _remainingActions = _maxActions;
+            ActionUsed?.Invoke(this, new ActionUsedEventArgs() { RemainingActions = _remainingActions });
         }
 
         public void UseAction(int actionCost)

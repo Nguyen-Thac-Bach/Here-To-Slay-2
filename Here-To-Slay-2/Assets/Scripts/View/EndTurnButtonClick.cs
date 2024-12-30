@@ -9,15 +9,15 @@ namespace View
     /// <summary>
     /// Tests if card draw is working
     /// </summary>
-    public class DrawCardButtonClick : MonoBehaviour
+    public class EndTurnButtonClick : MonoBehaviour
     {
         public Button Button;
 
-        public event EventHandler DrawCardButtonClicked;
+        public event EventHandler EndTurnButtonClicked;
 
         void Start()
         {
-            Button.onClick.AddListener(OnDrawCardButtonClicked);
+            Button.onClick.AddListener(OnEndTurnButtonClicked);
         }
 
         void Update()
@@ -25,9 +25,9 @@ namespace View
 
         }
 
-        void OnDrawCardButtonClicked()
+        void OnEndTurnButtonClicked()
         {
-            DrawCardButtonClicked?.Invoke(this, new EventArgs());
+            EndTurnButtonClicked?.Invoke(this, new EventArgs());
             Debug.Log("DrawCardButtonClick: OnDrawCardButtonClicked: Button clicked");
         }
     }

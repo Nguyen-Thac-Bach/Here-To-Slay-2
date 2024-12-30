@@ -28,28 +28,34 @@ namespace Model
             _createCardsFromJson = GetComponent<CreateCardsFromJson>();
             _createCardsFromJson.CardsCreated += OnCardsCreated;
 
+            _gameState.NewGame();
+
         }
         #region Public Methods
         public void MoveCard(int cardID, Deck destination)
         {
             _gameState.MoveCard(cardID, destination);
         }
+        public void EndTurn()
+        {
+            _gameState.EndTurn();
+        }
         /// <summary>
         /// Executes 1 atomic card effect.
         /// </summary>
         /// <param name="effect"></param>
-        /// <param name="effectSourceCardID">which card the effect originates from. Needed because the owner of the card is often also affected by the AtomicCardEffect</param>
+        /// <param name="effectSourceCardID">which card the effect originates from. Might be needed because the owner of the card is often also affected by the AtomicCardEffect</param>
         /// <exception cref="NotImplementedException"></exception>
-        public void ExecuteAtomicCardEffect(AtomicCardEffect effect, int effectSourceCardID)
+        public void ExecuteAtomicCardEffect(AtomicCardEffect effect, Player affectedPlayer = Player.None, int effectSourceCardID = -1)
         {
-            Player player = GetPlayer(effectSourceCardID);
+
             switch (effect)
             {
                 
                 //actorRelevant
                 case AtomicCardEffect.Draw:
                     
-                    ExecuteDrawEffect(player);
+                    ExecuteDrawEffect(affectedPlayer);
                     break;
                 //needsChoosingCard
                 case AtomicCardEffect.Recall:
@@ -68,6 +74,10 @@ namespace Model
 
         #endregion
         #region Private Methods
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="player">the one who will get the card</param>
         private void ExecuteDrawEffect(Player player)
         {
             int drawCardID = _gameState.GetTopCardFromDrawDeck().CardId;
