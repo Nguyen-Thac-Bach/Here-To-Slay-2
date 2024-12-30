@@ -23,8 +23,11 @@ namespace View
         public GameObject AttackableMonsters;
         public GameObject Player1Hand;
         public GameObject Player1Field;
+        public GameObject Player1SlainMonsters;
         public GameObject Player2Hand;
         public GameObject Player2Field;
+        public GameObject Player2SlainMonsters;
+
 
         #endregion
         //test button
@@ -59,10 +62,14 @@ namespace View
                     return Player1Hand;
                 case Deck.Player1Field:
                     return Player1Field;
+                case Deck.Player1SlainMonsters:
+                    return Player1SlainMonsters;
                 case Deck.Player2Hand:
                     return Player2Hand;
                 case Deck.Player2Field:
                     return Player2Field;
+                case Deck.Player2SlainMonsters:
+                    return Player2SlainMonsters;
                 default:
                     throw new Exception($"GameView: GetDeckObject: Deck enum \"{deck}\" not parseable");
             }

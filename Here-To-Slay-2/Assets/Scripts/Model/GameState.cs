@@ -144,13 +144,11 @@ namespace Model
             switch (deck)
             {
                 case Deck.Player1Hand:
-                    return true;
                 case Deck.Player2Hand:
-                    return true;
                 case Deck.Player1Field:
-                    return true;
                 case Deck.Player2Field:
-                    return true;
+                case Deck.Player1SlainMonsters:
+                case Deck.Player2SlainMonsters:
                 case Deck.AttackableMonsters:
                     return true;
                 default:
