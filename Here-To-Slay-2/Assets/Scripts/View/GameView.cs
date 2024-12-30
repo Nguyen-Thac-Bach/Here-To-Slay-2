@@ -32,7 +32,9 @@ namespace View
         #endregion
         //test button
         public GameObject TestButton;
+        public GameObject DrawCardButton;
         private GameModel _gameModel;
+        private GameState _gameState;
 
 
         #region Events
@@ -41,8 +43,10 @@ namespace View
         private void Start()
         {
             _gameModel = ModelManager.GetComponent<GameModel>();
-            _gameModel.CardMoved += OnCardMoved;
+            _gameState = _gameModel._gameState;
+            _gameState.CardMoved += OnCardMoved;
             TestButton.GetComponent<TestClick>().TestButtonClicked += OnTestButtonClicked;
+            DrawCardButton
 
         }
 

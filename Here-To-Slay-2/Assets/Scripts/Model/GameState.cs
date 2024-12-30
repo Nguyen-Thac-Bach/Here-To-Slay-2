@@ -2,6 +2,9 @@ using UnityEngine;
 using System.Collections.Generic;
 using Components;
 using Components.Enums;
+using Components.CustomEventArgs;
+using System;
+using System.Linq;
 
 namespace Model
 {
@@ -27,7 +30,9 @@ namespace Model
         private Player _currentPlayer;
         private int _remainingActions;
         #endregion
-
+        #region Events
+        public event EventHandler<CardMovedEventArgs> CardMoved;
+        #endregion
         #region Properties
         public static GameState Instance
         {
@@ -45,6 +50,17 @@ namespace Model
         }
         #endregion
         #region Public methods
+        public void NewGame()
+        {
+            _cards.Clear();
+            _currentPlayer = Player.Player1;
+            RefreshActions();
+        }
+        public void EndTurn()
+        {
+            SetToNextPlayer();
+            RefreshActions();
+        }
         public void AddCard(BaseCard card)
         {
             _cards.Add(card);
@@ -73,7 +89,7 @@ namespace Model
         /// <param name="cardID"></param>
         /// <param name="destination"></param>
         /// <returns>None if unsuccessful, otherwise the original deck the card belonged to</returns>
-        public Deck MoveCard(int cardID, Deck destination)
+        public void MoveCard(int cardID, Deck destination)
         {
             BaseCard card = _cards.Find(card => card.CardId == cardID);
 
@@ -84,21 +100,27 @@ namespace Model
                 card.SetDeck(destination);
                 int oldCardPosition = card.CardPosition;
                 SetCardPosition(card, destination);
+                int newPosition = card.CardPosition;
+                bool originNeedsAdjustment = IsDeckWithLimit(origin);
                 //2. Reposition cards in the origin deck if needed
-                if (IsDeckWithLimit(origin))
+                if (originNeedsAdjustment)
                 {
                     RepositionCards(origin, oldCardPosition);
+                    List<int> idsToAdjust = GetCardsFromDeck(origin).Select(cd => cd.CardId).ToList();
+                    List<int> adjustedPositions = GetCardsFromDeck(origin).Select(cd => cd.CardPosition).ToList();
+                    Debug.Log($"GameState: MoveCard: idsToAdjust: {string.Join(",", idsToAdjust)}");
+                    Debug.Log($"GameState: MoveCard: adjustedPositions: {string.Join(",", adjustedPositions)}");
+                    CardMoved?.Invoke(this, new CardMovedEventArgs() { Origin = origin, CardId = cardID, NewDeck = destination, NewPosition = newPosition, OriginNeedsAdjustment = originNeedsAdjustment, IdsToAdjust = idsToAdjust, AdjustedPositions = adjustedPositions });
                 }
-                
+                else
+                {
+                    CardMoved?.Invoke(this, new CardMovedEventArgs() { Origin = origin, CardId = cardID, NewDeck = destination, NewPosition = newPosition, OriginNeedsAdjustment = originNeedsAdjustment });
+                }
                 Debug.Log(cardID + " moved to " + destination.ToString());
-                return origin;
             }
             else {                 
                 Debug.Log("Deck is full");
-                return Deck.None;
             }
-            
-            
         }
 
         public Player GetCurrentPlayer()

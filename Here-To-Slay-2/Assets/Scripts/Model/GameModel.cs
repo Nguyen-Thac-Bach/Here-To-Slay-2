@@ -17,11 +17,9 @@ namespace Model
     /// <remarks>Order of script execution (check Script Execution Order settings): CreateCardsFromJson (once) -> GameModel->GameView </remarks>
     public class GameModel:MonoBehaviour
     {
-        #region Events
-        public event EventHandler<CardMovedEventArgs> CardMoved;
-        #endregion
+        
         private CreateCardsFromJson _createCardsFromJson;
-        private GameState _gameState;
+        public GameState _gameState;
         
         private void Start()
         {
@@ -34,30 +32,7 @@ namespace Model
         #region Public Methods
         public void MoveCard(int cardID, Deck destination)
         {
-            Deck origin = _gameState.MoveCard(cardID, destination);
-            if(origin == Deck.None)
-            {
-                Debug.Log($"GameModel: MoveCard: Could not move card {cardID} to {destination}");
-                return;
-            }
-            int newPosition = _gameState.GetCard(cardID).CardPosition;
-
-            if(_gameState.IsDeckWithLimit(origin))
-            {
-                bool originNeedsAdjustment = true;
-                List<int> idsToAdjust = _gameState.GetCardsFromDeck(origin).Select(card => card.CardId).ToList();
-                List<int> adjustedPositions = _gameState.GetCardsFromDeck(origin).Select(card => card.CardPosition).ToList();
-                Debug.Log($"GameModel: MoveCard: idsToAdjust: {string.Join(",", idsToAdjust)}");
-                Debug.Log($"GameModel: MoveCard: adjustedPositions: {string.Join(",", adjustedPositions)}");
-                CardMoved?.Invoke(this, new CardMovedEventArgs() { Origin = origin, CardId = cardID, NewDeck = destination, NewPosition = newPosition,OriginNeedsAdjustment = originNeedsAdjustment,IdsToAdjust = idsToAdjust, AdjustedPositions = adjustedPositions });
-            }
-            else
-            {
-                bool originNeedsAdjustment = false;
-                CardMoved?.Invoke(this, new CardMovedEventArgs() { Origin = origin, CardId = cardID, NewDeck = destination, NewPosition = newPosition,  OriginNeedsAdjustment = originNeedsAdjustment});
-            }
-            
-            
+            _gameState.MoveCard(cardID, destination);
         }
         /// <summary>
         /// Executes 1 atomic card effect.
