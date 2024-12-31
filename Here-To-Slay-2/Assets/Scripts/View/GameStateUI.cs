@@ -49,6 +49,18 @@ namespace View
             throw new System.Exception($"GameStateUI: GetCard: Card with id {id} not found");
         }
 
+        public List<GameObject> GetCardsInDeck(Deck deck)
+        {
+            List<GameObject> cardsInDeck = new List<GameObject>();
+            foreach (GameObject card in _cardList)
+            {
+                if (card.GetComponent<HeroCardUI>().CurrentDeck == deck)
+                {
+                    cardsInDeck.Add(card);
+                }
+            }
+            return cardsInDeck;
+        }
         public void SetCurrentPlayerUI(Player player)
         {
             _currentPlayerUI = player;
