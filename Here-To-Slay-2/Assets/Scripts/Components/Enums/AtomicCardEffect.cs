@@ -17,7 +17,7 @@ namespace Components.Enums
         //actorRelevant
         Draw,
         //needsChoosingCard
-        Recall,
+        //Recall,
         //needsChoosingCard, actorRelevant
         Discard,
         PlaySpell,

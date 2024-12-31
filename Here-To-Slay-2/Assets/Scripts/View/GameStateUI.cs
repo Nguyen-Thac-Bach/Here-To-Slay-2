@@ -14,11 +14,12 @@ namespace View
     /// </summary>
     public class GameStateUI : MonoBehaviour
     {
-        public GameObject PlayerAndActionText;
+        public GameObject Phase_Player_ActionText;
         //If debugging is needed, change to public
         private List<GameObject> _cardList;
         private Player _currentPlayerUI;
         private int _remainingActionsUI;
+        private GamePhase _currentPhaseUI;
 
         public List<GameObject> CardList
         {
@@ -27,10 +28,7 @@ namespace View
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
         {
-
-
             _cardList = new List<GameObject>();
-            UpdatePlayerAndActionText();
         }
 
         public void AddCard(GameObject card)
@@ -54,17 +52,26 @@ namespace View
         public void SetCurrentPlayerUI(Player player)
         {
             _currentPlayerUI = player;
-            UpdatePlayerAndActionText();
+            UpdatePhase_Player_ActionText();
         }
         public void SetRemainingActionsUI(int actions)
         {
             _remainingActionsUI = actions;
-            UpdatePlayerAndActionText();
+            UpdatePhase_Player_ActionText();
         }
-        private void UpdatePlayerAndActionText()
+        public void SetCurrentPhaseUI(GamePhase phase)
         {
-            PlayerAndActionText.GetComponent<TextMeshProUGUI>().text = $"Player: {_currentPlayerUI}, Actions: {_remainingActionsUI}";
-            Debug.Log($"GameStateUI: UpdatePlayerAndActionText: Updated player and action text to Player: {_currentPlayerUI}, Actions: {_remainingActionsUI}");
+            _currentPhaseUI = phase;
+            Debug.Log($"GameStateUI: SetCurrentPhaseUI: Phase set to {phase}");
+            UpdatePhase_Player_ActionText();
+        }
+        private void UpdatePhase_Player_ActionText()
+        {
+            Phase_Player_ActionText.GetComponent<TextMeshProUGUI>().text = 
+                $"Player: {_currentPlayerUI}\n" +
+                $"Actions: {_remainingActionsUI}\n" +
+                $"Phase: {_currentPhaseUI}";
+            Debug.Log($"GameStateUI: UpdatePlayerAndActionText: Updated text to: Player: {_currentPlayerUI}, Actions: {_remainingActionsUI}, Phase: {_currentPhaseUI}");
         }
 
     }

@@ -27,13 +27,16 @@ namespace Model
         private const int _maxCardsInAttackableMonsters = 3;
         private const int _maxCardsInSlainMonsters = 3;
         private const int _maxActions = 3;
+        private const int _startingHandSize = 5;
         private Player _currentPlayer;
         private int _remainingActions;
+        private GamePhase _currentPhase;
         #endregion
         #region Events
         public event EventHandler<CardMovedEventArgs> CardMoved;
         public event EventHandler<PlayerChangedEventArgs> PlayerChanged;
         public event EventHandler<ActionUsedEventArgs> ActionUsed;
+        public event EventHandler<PhaseChangedEventArgs> PhaseChanged;
         #endregion
         #region Properties
         public static GameState Instance
@@ -52,11 +55,14 @@ namespace Model
         }
         #endregion
         #region Public methods
-        public void NewGame()
+        public void StartGame()
         {
+            RefreshActions();
             _currentPlayer = Player.Player1;
             PlayerChanged?.Invoke(this, new PlayerChangedEventArgs() { Player = _currentPlayer });
-            RefreshActions();
+            DrawStartingCards();
+            _currentPhase = GamePhase.ChoosingAction;
+            PhaseChanged?.Invoke(this, new PhaseChangedEventArgs() { GamePhase = _currentPhase });
             Debug.Log("GameState: NewGame: New game started");
         }
         public void EndTurn()
@@ -138,6 +144,8 @@ namespace Model
             _currentPlayer = _currentPlayer == Player.Player1 ? Player.Player2 : Player.Player1;
             PlayerChanged?.Invoke(this, new PlayerChangedEventArgs() { Player = _currentPlayer });  
             Debug.Log("Current player: " + _currentPlayer.ToString());
+            _currentPhase = GamePhase.ChoosingAction;
+            PhaseChanged?.Invoke(this, new PhaseChangedEventArgs() { GamePhase = _currentPhase });
         }
 
         public int GetRemainingActions()
@@ -152,6 +160,8 @@ namespace Model
             _remainingActions = _maxActions;
             ActionUsed?.Invoke(this, new ActionUsedEventArgs() { RemainingActions = _remainingActions });
         }
+
+        
 
         public void UseAction(int actionCost)
         {
@@ -184,6 +194,16 @@ namespace Model
         }
         #endregion
         #region Private methods
+        private void DrawStartingCards()
+        {
+            for (int i = 0; i < _startingHandSize; i++)
+            {
+                MoveCard(GetTopCardFromDrawDeck().CardId, Deck.Player1Hand);
+                MoveCard(GetTopCardFromDrawDeck().CardId, Deck.Player2Hand);
+            }
+            Debug.Log("GameState: DrawStartingCards: Starting cards drawn");
+
+        }
         private bool DeckNotFull(Deck deck)
         {
             switch (deck)

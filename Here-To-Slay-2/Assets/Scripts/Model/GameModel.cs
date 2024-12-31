@@ -28,13 +28,18 @@ namespace Model
             _createCardsFromJson = GetComponent<CreateCardsFromJson>();
             _createCardsFromJson.CardsCreated += OnCardsCreated;
 
-            _gameState.NewGame();
-
         }
         #region Public Methods
         public void MoveCard(int cardID, Deck destination)
         {
             _gameState.MoveCard(cardID, destination);
+        }
+        /// <summary>
+        /// Sets up the first turn of the game, assuming all cards are already created and in correct deck
+        /// </summary>
+        public void StartGame()
+        {
+            _gameState.StartGame();
         }
         public void EndTurn()
         {
@@ -54,14 +59,16 @@ namespace Model
                 
                 //actorRelevant
                 case AtomicCardEffect.Draw:
-                    
                     ExecuteDrawEffect(affectedPlayer);
                     break;
                 //needsChoosingCard
-                case AtomicCardEffect.Recall:
-                    ExecuteRecallEffect();
-                    break;
+                //case AtomicCardEffect.Recall:
+                //    ExecuteRecallEffect();
+                //    break;
                 //needsChoosingCard, actorRelevant
+                case AtomicCardEffect.Discard:
+                    ExecuteDiscardEffect(affectedPlayer);
+                    break;
                 case AtomicCardEffect.Slay:
                     ExecuteSlayEffect();
                     break;
@@ -84,10 +91,10 @@ namespace Model
             Debug.Log($"GameModel: ExecuteDrawEffect: Player {player} drew card {drawCardID}");
             MoveCard(drawCardID, player == Player.Player1 ? Deck.Player1Hand : Deck.Player2Hand);
         }
-        private void ExecuteRecallEffect()
-        {
-            //TODO: implement when items are implemented
-        }
+        //private void ExecuteRecallEffect()
+        //{
+        //    //TODO: implement when items are implemented
+        //}
         private void ExecuteDiscardEffect(Player player)
         {
             BaseCard cardToDiscard = ChooseCardFromDeck(player == Player.Player1 ? Deck.Player1Hand : Deck.Player2Hand);

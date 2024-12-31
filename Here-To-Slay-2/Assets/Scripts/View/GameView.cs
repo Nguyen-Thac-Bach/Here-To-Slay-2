@@ -49,11 +49,14 @@ namespace View
             _gameState.CardMoved += OnCardMoved;
             _gameState.PlayerChanged += OnPlayerChanged;
             _gameState.ActionUsed += OnActionUsed;
+            _gameState.PhaseChanged += OnPhaseChanged;
 
             _gameStateUI = GetComponent<GameStateUI>();
             TestButton.GetComponent<TestClick>().TestButtonClicked += OnTestButtonClicked;
             DrawCardButton.GetComponent<DrawCardButtonClick>().DrawCardButtonClicked += OnDrawCardButtonClicked;
             EndTurnButton.GetComponent<EndTurnButtonClick>().EndTurnButtonClicked += OnEndTurnButtonClicked;
+
+            _gameModel.StartGame();
         }
 
         private GameObject GetDeckObject(Deck deck)
@@ -137,7 +140,10 @@ namespace View
             _gameStateUI.SetRemainingActionsUI(e.RemainingActions);
             Debug.Log($"GameView: OnActionUsed: Remaining actions: {e.RemainingActions}");
         }
-
+        private void OnPhaseChanged(object sender, PhaseChangedEventArgs e)
+        {
+            Debug.Log($"GameView: OnPhaseChanged: Phase changed to {e.GamePhase}");
+        }
         private void AdjustOriginDeckUI(CardMovedEventArgs e)
         {
             Debug.Log($"GameView: OnCardMoved: Readjusting origin deck");
