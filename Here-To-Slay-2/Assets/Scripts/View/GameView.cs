@@ -149,6 +149,7 @@ namespace View
         }
         private void OnPhaseChanged(object sender, PhaseChangedEventArgs e)
         {
+            _gameStateUI.SetCurrentPhaseUI(e.GamePhase);
             Debug.Log($"GameView: OnPhaseChanged: Phase changed to {e.GamePhase}");
         }
         private void AdjustOriginDeckUI(CardMovedEventArgs e)
