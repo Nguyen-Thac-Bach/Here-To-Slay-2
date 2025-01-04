@@ -55,6 +55,8 @@ namespace View
             _gameState.PlayerChanged += OnPlayerChanged;
             _gameState.ActionUsed += OnActionUsed;
             _gameState.PhaseChanged += OnPhaseChanged;
+            _gameState.TopCardInDrawDeckChanged += OnTopCardInDrawDeckChanged;
+            _gameState.CardMovedFromDrawDeck += CardMovedFromDrawDeck;
 
             _gameStateUI = GetComponent<GameStateUI>();
             TestButton.GetComponent<TestClick>().TestButtonClicked += OnTestButtonClicked;
@@ -113,7 +115,7 @@ namespace View
 
             }
             //update the deck tag of the card
-            card.GetComponent<DeckTagUI>().SetDeck(e.NewDeck);
+            card.GetComponent<BaseCardUI>().SetDeck(e.NewDeck);
 
 
             //reposition the other cards in the original deck if needed
@@ -124,6 +126,7 @@ namespace View
 
 
         }
+        #region Event Handlers for GameState events
         private void OnDrawCardButtonClicked(object sender, EventArgs e)
         {
             _gameModel.ExecuteAtomicCardEffect(AtomicCardEffect.Draw, _gameState.GetCurrentPlayer());
@@ -152,6 +155,21 @@ namespace View
             _gameStateUI.SetCurrentPhaseUI(e.GamePhase);
             Debug.Log($"GameView: OnPhaseChanged: Phase changed to {e.GamePhase}");
         }
+        private void OnTopCardInDrawDeckChanged(object sender, TopCardInDrawDeckChangedEventArgs e)
+        {
+            _gameStateUI.SetTopCardInDrawDeckID(e.NewTopCardInDrawDeckId);
+            GameObject topCard = _gameStateUI.GetCard(e.NewTopCardInDrawDeckId);
+            topCard.transform.SetAsLastSibling();
+
+
+            Debug.Log($"GameView: OnTopCardInDrawDeckChanged: Top card in draw deck changed to {e.NewTopCardInDrawDeckId}");
+        }
+        private void CardMovedFromDrawDeck(object sender, CardMovedFromDrawDeckEventArgs e)
+        {
+            _gameStateUI.UpdateDrawnCardEventListeners(e.MovedCardId);
+            Debug.Log($"GameView: CardMovedFromDrawDeck: Card {e.MovedCardId} moved from draw deck to a player's hand");
+        }
+        #endregion
         private void AdjustOriginDeckUI(CardMovedEventArgs e)
         {
             Debug.Log($"GameView: OnCardMoved: Readjusting origin deck");

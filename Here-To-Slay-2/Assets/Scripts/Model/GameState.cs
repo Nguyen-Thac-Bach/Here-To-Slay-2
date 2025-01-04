@@ -34,9 +34,11 @@ namespace Model
         #endregion
         #region Events
         public event EventHandler<CardMovedEventArgs> CardMoved;
+        public event EventHandler<CardMovedFromDrawDeckEventArgs> CardMovedFromDrawDeck;
         public event EventHandler<PlayerChangedEventArgs> PlayerChanged;
         public event EventHandler<ActionUsedEventArgs> ActionUsed;
         public event EventHandler<PhaseChangedEventArgs> PhaseChanged;
+        public event EventHandler<TopCardInDrawDeckChangedEventArgs> TopCardInDrawDeckChanged;
         #endregion
         #region Properties
         public static GameState Instance
@@ -111,7 +113,13 @@ namespace Model
                 SetCardPosition(card, destination);
                 int newPosition = card.CardPosition;
                 bool originNeedsAdjustment = IsDeckWithLimit(origin);
-                //2. Reposition cards in the origin deck if needed
+                //2. If the card was from the draw deck, notify the subscribers
+                if (origin == Deck.DrawDeck)
+                {
+                    TopCardInDrawDeckChanged?.Invoke(this, new TopCardInDrawDeckChangedEventArgs() { NewTopCardInDrawDeckId = GetTopCardFromDrawDeck().CardId });
+                    CardMovedFromDrawDeck?.Invoke(this, new CardMovedFromDrawDeckEventArgs() { MovedCardId = cardID });
+                }
+                //3. Reposition cards in the origin deck if needed
                 if (originNeedsAdjustment)
                 {
                     RepositionCards(origin, oldCardPosition);

@@ -25,7 +25,7 @@ namespace Components
         public bool IsActivatable { get => _isActivatable; }
         #endregion
         #region Constructors
-        public HeroCard(int cardId,string name, string description,bool isViewable,Deck deck, int minRoll, List<Effect> effects, HeroClass baseHeroClass, HeroClass currentHeroClass, bool isActivatable) : base(cardId, name, description, isViewable, deck)
+        public HeroCard(int cardId,string name, string description,bool isFaceUp,Deck deck, int minRoll, List<Effect> effects, HeroClass baseHeroClass, HeroClass currentHeroClass, bool isActivatable) : base(cardId, name, description, isFaceUp, deck)
         {
             _minRoll = minRoll;
             _effects = effects;

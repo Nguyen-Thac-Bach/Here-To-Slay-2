@@ -59,10 +59,17 @@ namespace Model
 
                 //2. Create the card in the view
                 GameObject HeroCardObject = Instantiate(HeroCardPrefab, CardParent.transform);
-                HeroCardObject.name = hero.name;
+                HeroCardObject.name = hero.id + ":" +hero.name;
+                //HeroCardUI
                 HeroCardObject.GetComponent<HeroCardUI>().SetHeroData(hero.id, hero.name, hero.heroClass, hero.description, hero.minRoll);
                 Debug.Log($"CreateCardsFromJson: Created hero card: {hero.name}");
-                HeroCardObject.GetComponent<DeckTagUI>().SetDeck(Deck.DrawDeck);
+                //BaseCardUI
+                HeroCardObject.GetComponent<BaseCardUI>().SetDeck(Deck.DrawDeck);
+                HeroCardObject.GetComponent<BaseCardUI>().SetId(hero.id);
+                //cards in draw deck are face down
+                HeroCardObject.GetComponent<BaseCardUI>().SetIsFaceUp(false);
+                HeroCardObject.GetComponent<BaseCardUI>().SetIsTopCardInDrawDeck(false);
+
                 ViewManager.GetComponent<GameStateUI>().AddCard(HeroCardObject);
                 Debug.Log("CreateCardsFromJson: Added hero card to GameStateUI");
             }

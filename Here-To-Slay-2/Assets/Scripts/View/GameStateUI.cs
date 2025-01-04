@@ -35,14 +35,19 @@ namespace View
         public void AddCard(GameObject card)
         {
             _cardList.Add(card);
-            Debug.Log($"CardList: Added card: {card.GetComponent<HeroCardUI>().HeroName}");
+            Debug.Log($"CardList: Added card: {card.GetComponent<BaseCardUI>().Id}");
         }
-
+        /// <summary>
+        /// gets the card object with the given id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        /// <exception cref="System.Exception">if card with given id not found</exception>
         public GameObject GetCard(int id)
         {
             foreach (GameObject card in _cardList)
             {
-                if (card.GetComponent<HeroCardUI>().Id == id)
+                if (card.GetComponent<BaseCardUI>().Id == id)
                 {
                     return card;
                 }
@@ -55,7 +60,7 @@ namespace View
             List<GameObject> cardsInDeck = new List<GameObject>();
             foreach (GameObject card in _cardList)
             {
-                if (card.GetComponent<DeckTagUI>().Deck == deck)
+                if (card.GetComponent<BaseCardUI>().Deck == deck)
                 {
                     cardsInDeck.Add(card);
                 }
@@ -75,22 +80,41 @@ namespace View
         public void SetCurrentPhaseUI(GamePhase phase)
         {
             _currentPhaseUI = phase;
-            UpdateCardEventListeners();
+            UpdateCardEventListenersOnPhaseChange();
             Debug.Log($"GameStateUI: SetCurrentPhaseUI: Phase set to {phase}");
             UpdatePhase_Player_ActionText();
+        }
+        public void SetTopCardInDrawDeckID(int id)
+        {
+            _topCardOfDrawDeckID = id;
+            UpdateTopCardInDrawDeckCardEventListener(id);
+            Debug.Log($"GameStateUI: SetTopCardInDrawDeckID: Top card in draw deck set to {id}");
+        }
+        public void UpdateDrawnCardEventListeners(int id)
+        {
+            GameObject card = GetCard(id);
+            Button button = card.GetComponent<BaseCardUI>().GetButton();
+            button.onClick.RemoveAllListeners();
+            button.onClick.AddListener(() => Debug.Log($"GameStateUI: UpdateDrawnCardEventListener: Card {id} clicked"));
+            bool drawnDuringOwnTurn;
+            if (_currentPlayerUI == Player.Player1)
+            {
+                drawnDuringOwnTurn = card.GetComponent<BaseCardUI>().Deck == Deck.Player1Hand;
+            }
+            else
+            {
+                drawnDuringOwnTurn = card.GetComponent<BaseCardUI>().Deck == Deck.Player2Hand;
+            }
+            bool isChoosingActionPhase = _currentPhaseUI == GamePhase.ChoosingAction;
+            button.interactable = drawnDuringOwnTurn && isChoosingActionPhase;
+            Debug.Log($"GameStateUI: UpdateDrawnCardEventListeners: Updated event listeners for card {id}. Interactable = drawnDuringOwnTurn({drawnDuringOwnTurn}) && isChooingActionPhase({isChoosingActionPhase})");
         }
         public Button GetButton(int id)
         {
             GameObject card = GetCard(id);
-            if (card.GetComponent<HeroCardUI>() != null)
-            {
-                Debug.Log($"GameStateUI: GetButton: Card with id {id} is a HeroCardUI, getting its button");
-                return card.GetComponent<HeroCardUI>().GetButton();
-            }
-            //if no card type is matching, throw an exception
-            throw new System.Exception($"GameStateUI: GetButton: Card with id {id} is not a HeroCardUI");
-
+            return card.GetComponent<BaseCardUI>().GetButton();
         }
+        #region Private methods
         private void UpdatePhase_Player_ActionText()
         {
             Phase_Player_ActionText.GetComponent<TextMeshProUGUI>().text = 
@@ -99,7 +123,7 @@ namespace View
                 $"Phase: {_currentPhaseUI}";
             Debug.Log($"GameStateUI: UpdatePlayerAndActionText: Updated text to: Player: {_currentPlayerUI}, Actions: {_remainingActionsUI}, Phase: {_currentPhaseUI}");
         }
-        private void UpdateCardEventListeners()
+        private void UpdateCardEventListenersOnPhaseChange()
         {
             ResetCardEventListeners();
             switch (_currentPhaseUI)
@@ -124,32 +148,37 @@ namespace View
                     break;
             }
         }
+        private void UpdateTopCardInDrawDeckCardEventListener(int id)
+        {
+            GameObject card = GetCard(id);
+            Button button = card.GetComponent<BaseCardUI>().GetButton();
+            button.onClick.RemoveAllListeners();
+            button.onClick.AddListener(() => Debug.Log($"GameStateUI: UpdateTopCardInDrawDeckCardEventListener: Card {id} clicked"));
+            bool isChoosingActionPhase = _currentPhaseUI == GamePhase.ChoosingAction;
+            button.interactable = isChoosingActionPhase;
+            Debug.Log($"GameStateUI: UpdateTopCardInDrawDeckCardEventListener: Updated event listeners for card {id}. Interactable = isChooingActionPhase({isChoosingActionPhase})");
+        }
+
         private void ResetCardEventListeners()
         {
             foreach (GameObject card in _cardList)
             {
-                if(card.GetComponent<HeroCardUI>() != null)
-                {
-                    Button button = card.GetComponent<HeroCardUI>().GetButton();
-                    button.onClick.RemoveAllListeners();
-                    button.interactable = false;
-                }
-                else throw new System.Exception($"GameStateUI: ResetCardEventListeners: not implemented for card type {card.GetType()}");
+                Button button = card.GetComponent<BaseCardUI>().GetButton();
+                button.onClick.RemoveAllListeners();
+                button.interactable = false;
             }
+            Debug.Log($"GameStateUI: ResetCardEventListeners: Removed all listeners and set interactable to false for all cards");
         }
         private void ListenForActivation(Deck deck)
         {
             List<GameObject> cardsInDeck = GetCardsInDeck(deck);
             foreach (GameObject card in cardsInDeck)
             {
-                if(card.GetComponent<HeroCardUI>() != null)
-                {
-                    Button button = card.GetComponent<HeroCardUI>().GetButton();
-                    button.onClick.AddListener(() => Debug.Log($"GameStateUI: ListenForActivation: Card {card.GetComponent<HeroCardUI>().HeroName} clicked"));
-                    button.interactable = true;
-                }
-                else throw new System.Exception($"GameStateUI: ListenForActivation: not implemented for card type {card.GetType()}");
+                Button button = card.GetComponent<BaseCardUI>().GetButton();
+                button.onClick.AddListener(() => Debug.Log($"GameStateUI: ListenForActivation: Card {card.GetComponent<BaseCardUI>().Id} clicked"));
+                button.interactable = true;
             }
+            Debug.Log($"GameStateUI: ListenForActivation: Added listeners and set interactable to true for all cards in deck {deck}");
         }
         /// <summary>
         /// Only has monster type cards
@@ -166,25 +195,15 @@ namespace View
             //throw new System.Exception($"GameStateUI: ListenForAttack: not implemented");
         }
         /// <summary>
-        /// Puts top card of draw deck in hand
+        /// Makes the top card of the draw deck clickable
         /// </summary>
         /// <exception cref="System.Exception"></exception>
         private void ListenForDraw()
         {
-            List<GameObject> drawDeck = GetCardsInDeck(Deck.DrawDeck);
-            foreach (GameObject card in drawDeck)
-            {
-                if (card.GetComponent<HeroCardUI>() != null)
-                {
-                    Button button = card.GetComponent<HeroCardUI>().GetButton();
-                    button.onClick.AddListener(() => Debug.Log($"GameStateUI: ListenForActivation: Card {card.GetComponent<HeroCardUI>().HeroName} clicked"));
-                    button.interactable = true;
-                }
-                else throw new System.Exception($"GameStateUI: ListenForActivation: not implemented for card type {card.GetType()}");
-            }
+            GameObject topCard = GetCard(_topCardOfDrawDeckID);
         }
 
-        
+        #endregion
 
     }
 }

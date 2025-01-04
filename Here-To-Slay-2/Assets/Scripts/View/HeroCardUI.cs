@@ -28,6 +28,7 @@ namespace View {
         /// </summary>
         private List<string> _textComponentNames = new List<string> { "Name", "CardType", "Description", "RollReq" };
         private const string _buttonLocation = "Overlay";
+        private const string _borderLocation = "Border";
         private const string _cardTypePrefix = "Hős:";
         private Transform _border;
         private List<Transform> _textComponents;
@@ -85,25 +86,9 @@ namespace View {
             SetData();
             _dataReceived = true;
         }
-
-        public Button GetButton()
-        {
-            GameObject overlay = transform.Find(_buttonLocation).gameObject;
-            Debug.Log($"HeroCardUI: GetButton: Button will be found in: {overlay.name}");
-            return overlay.GetComponent<Button>();
-        }
         #endregion
         #region Private methods
-        private Transform GetBorder(Transform parent)
-        {
-            List<Transform> children = new List<Transform>();
 
-            foreach (Transform child in parent)
-            {
-                children.Add(child);
-            }
-            return children[0];
-        }
         /// <summary>
         /// Gets the text components of the border
         /// </summary>
@@ -148,7 +133,7 @@ namespace View {
         {
             _dataReceived = false;
             //get the border and text components
-            _border = GetBorder(transform);
+            _border = transform.Find(_borderLocation);
             //Debug.Log($"HeroCardUI: {_border.name}");
             _textComponents = GetTextComponents(_border);
             //foreach (Transform textComponent in _textComponents)

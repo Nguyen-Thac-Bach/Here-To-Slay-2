@@ -9,7 +9,7 @@ namespace Components {
         private int _cardId;
         private string _name;
         private string _description;
-        private bool _isViewable;
+        private bool _isFaceUp;
         private Deck _deck;
         private int _cardPosition;
 
@@ -20,7 +20,7 @@ namespace Components {
         public string Name { get => _name; }
         //TODO: add image field
         public string Description { get => _description; }
-        public bool IsViewable { get => _isViewable; }
+        public bool IsFaceUP { get => _isFaceUp; }
         public Deck Deck { get => _deck; }
         /// <summary>
         /// Relevant for cards in the player's hand, field; attackable monsters
@@ -30,12 +30,12 @@ namespace Components {
         #endregion
 
         #region Constructors
-        public BaseCard(int cardId, string name, string description, bool isViewable, Deck deck)
+        public BaseCard(int cardId, string name, string description, bool isFaceUp, Deck deck)
         {
             _cardId = cardId;
             _name = name;
             _description = description;
-            _isViewable = isViewable;
+            _isFaceUp = isFaceUp;
             _deck = deck;
             _cardPosition = -1;
         }
@@ -48,14 +48,14 @@ namespace Components {
         /// </summary>
         public void Show()
         {
-            _isViewable = true;
+            _isFaceUp = true;
         }
         /// <summary>
         /// Make the card face down
         /// </summary>
         public void Hide()
         {
-            _isViewable = false;
+            _isFaceUp = false;
         }
         /// <summary>
         /// Move the card to the specified deck
