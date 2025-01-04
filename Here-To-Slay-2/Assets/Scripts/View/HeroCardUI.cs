@@ -4,6 +4,7 @@ using TMPro;
 using UnityEngine;
 
 using System;
+using UnityEngine.UI;
 
 
 namespace View {
@@ -26,6 +27,7 @@ namespace View {
         /// ONLY CHANGE THIS LIST IF THE UI ELEMENTS ARE RENAMED
         /// </summary>
         private List<string> _textComponentNames = new List<string> { "Name", "CardType", "Description", "RollReq" };
+        private const string _buttonLocation = "Overlay";
         private const string _cardTypePrefix = "Hős:";
         private Transform _border;
         private List<Transform> _textComponents;
@@ -82,6 +84,13 @@ namespace View {
             Debug.Log($"HeroCardUI: SetHeroData: Hero name: {heroName}, Hero class: {heroClass}, Hero description: {heroDescription}, Roll requirement: {rollRequirement}");
             SetData();
             _dataReceived = true;
+        }
+
+        public Button GetButton()
+        {
+            GameObject overlay = transform.Find(_buttonLocation).gameObject;
+            Debug.Log($"HeroCardUI: GetButton: Button will be found in: {overlay.name}");
+            return overlay.GetComponent<Button>();
         }
         #endregion
         #region Private methods

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.UI;
 
 using Model;
 using Components.CustomEventArgs;
@@ -34,6 +35,10 @@ namespace View
         public GameObject TestButton;
         public GameObject DrawCardButton;
         public GameObject EndTurnButton;
+        /// <summary>
+        /// Used to test if GameView can get a button from the scene
+        /// </summary>
+        public GameObject ButtonGetterButton;
         private GameModel _gameModel;
         private GameState _gameState;
         private GameStateUI _gameStateUI;
@@ -55,7 +60,7 @@ namespace View
             TestButton.GetComponent<TestClick>().TestButtonClicked += OnTestButtonClicked;
             DrawCardButton.GetComponent<DrawCardButtonClick>().DrawCardButtonClicked += OnDrawCardButtonClicked;
             EndTurnButton.GetComponent<EndTurnButtonClick>().EndTurnButtonClicked += OnEndTurnButtonClicked;
-
+            ButtonGetterButton.GetComponent<ButtonGetterButtonClick>().ButtonGetterButtonClicked += OnButtonGetterButtonClicked;
             _gameModel.StartGame();
         }
 
@@ -107,6 +112,8 @@ namespace View
                 Debug.Log($"GameView: OnCardMoved: Card {e.CardId} moved to {e.NewDeck}: {e.NewPosition}");
 
             }
+            //update the deck tag of the card
+            card.GetComponent<DeckTagUI>().SetDeck(e.NewDeck);
 
 
             //reposition the other cards in the original deck if needed
@@ -164,6 +171,12 @@ namespace View
         private void OnTestButtonClicked(object sender, TestButtonClickedEventArgs e)
         {
             _gameModel.MoveCard(e.CardId, e.Deck);
+        }
+        private void OnButtonGetterButtonClicked(object sender, ButtonGetterButtonGlickedEventArgs e)
+        {
+            Debug.Log($"GameView: OnButtonGetterButtonClicked: ButtonGetterButton clicked with id: {e.Id}");
+            Button button = _gameStateUI.GetButton(e.Id);
+            button.interactable = false;
         }
     }
 }

@@ -54,7 +54,7 @@ namespace View
             List<GameObject> cardsInDeck = new List<GameObject>();
             foreach (GameObject card in _cardList)
             {
-                if (card.GetComponent<HeroCardUI>().CurrentDeck == deck)
+                if (card.GetComponent<DeckTagUI>().Deck == deck)
                 {
                     cardsInDeck.Add(card);
                 }
@@ -77,6 +77,18 @@ namespace View
             Debug.Log($"GameStateUI: SetCurrentPhaseUI: Phase set to {phase}");
             UpdatePhase_Player_ActionText();
         }
+        public Button GetButton(int id)
+        {
+            GameObject card = GetCard(id);
+            if (card.GetComponent<HeroCardUI>() != null)
+            {
+                Debug.Log($"GameStateUI: GetButton: Card with id {id} is a HeroCardUI, getting its button");
+                return card.GetComponent<HeroCardUI>().GetButton();
+            }
+            //if no card type is matching, throw an exception
+            throw new System.Exception($"GameStateUI: GetButton: Card with id {id} is not a HeroCardUI");
+
+        }
         private void UpdatePhase_Player_ActionText()
         {
             Phase_Player_ActionText.GetComponent<TextMeshProUGUI>().text = 
@@ -85,6 +97,8 @@ namespace View
                 $"Phase: {_currentPhaseUI}";
             Debug.Log($"GameStateUI: UpdatePlayerAndActionText: Updated text to: Player: {_currentPlayerUI}, Actions: {_remainingActionsUI}, Phase: {_currentPhaseUI}");
         }
+
+        
 
     }
 }

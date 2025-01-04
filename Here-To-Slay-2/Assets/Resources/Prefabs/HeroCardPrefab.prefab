@@ -376,6 +376,7 @@ GameObject:
   - component: {fileID: 4847013433219047345}
   - component: {fileID: 4257661631469652941}
   - component: {fileID: 1748421335987704320}
+  - component: {fileID: 5196986841010258679}
   m_Layer: 5
   m_Name: HeroCardPrefab
   m_TagString: Untagged
@@ -467,6 +468,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timerValue: 0.1
+--- !u!114 &5196986841010258679
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2770946716801852076}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80f82edf0e783e84695c109ce214205f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3421919724253545040
 GameObject:
   m_ObjectHideFlags: 0

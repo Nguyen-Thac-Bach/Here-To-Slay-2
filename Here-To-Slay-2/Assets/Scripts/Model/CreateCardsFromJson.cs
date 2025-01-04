@@ -62,6 +62,7 @@ namespace Model
                 HeroCardObject.name = hero.name;
                 HeroCardObject.GetComponent<HeroCardUI>().SetHeroData(hero.id, hero.name, hero.heroClass, hero.description, hero.minRoll);
                 Debug.Log($"CreateCardsFromJson: Created hero card: {hero.name}");
+                HeroCardObject.GetComponent<DeckTagUI>().SetDeck(Deck.DrawDeck);
                 ViewManager.GetComponent<GameStateUI>().AddCard(HeroCardObject);
                 Debug.Log("CreateCardsFromJson: Added hero card to GameStateUI");
             }
