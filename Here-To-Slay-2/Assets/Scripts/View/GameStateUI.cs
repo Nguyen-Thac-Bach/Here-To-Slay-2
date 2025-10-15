@@ -5,7 +5,9 @@ using System.Collections.Generic;
 
 using Model;
 using Components.Enums;
+using Components.CustomEventArgs;
 using TMPro;
+using System;
 
 namespace View
 {
@@ -21,6 +23,8 @@ namespace View
         private int _remainingActionsUI;
         private GamePhase _currentPhaseUI;
         private int _topCardOfDrawDeckID;
+
+        public event EventHandler<DrawCardEventArgs> DrawCardRequested;
 
         public List<GameObject> CardList
         {
@@ -114,6 +118,10 @@ namespace View
             GameObject card = GetCard(id);
             return card.GetComponent<BaseCardUI>().GetButton();
         }
+        public bool CanDrawCard()
+        {
+            return _currentPhaseUI == GamePhase.ChoosingAction;
+        }
         #region Private methods
         private void UpdatePhase_Player_ActionText()
         {
@@ -152,10 +160,20 @@ namespace View
         {
             GameObject card = GetCard(id);
             Button button = card.GetComponent<BaseCardUI>().GetButton();
-            button.onClick.RemoveAllListeners();
-            button.onClick.AddListener(() => Debug.Log($"GameStateUI.UpdateTopCardInDrawDeckCardEventListener: Card {id} clicked"));
+
             bool isChoosingActionPhase = _currentPhaseUI == GamePhase.ChoosingAction;
             button.interactable = isChoosingActionPhase;
+
+            button.onClick.RemoveAllListeners();
+            button.onClick.AddListener(() =>
+            {
+                if (CanDrawCard())
+                {
+                    // Raise an event to request drawing a card
+                    DrawCardRequested?.Invoke(this, new DrawCardEventArgs { activePlayerDraws = true });
+                }
+                Debug.Log($"GameStateUI.UpdateTopCardInDrawDeckCardEventListener: Card {id} clicked");
+            });
             Debug.Log($"GameStateUI.UpdateTopCardInDrawDeckCardEventListener: Updated event listeners for card {id}. Interactable = isChooingActionPhase({isChoosingActionPhase})");
         }
 
@@ -200,7 +218,22 @@ namespace View
         /// <exception cref="System.Exception"></exception>
         private void ListenForDraw()
         {
-            GameObject topCard = GetCard(_topCardOfDrawDeckID);
+            if (_topCardOfDrawDeckID != -1) // Ensure a top card exists
+            {
+                GameObject topCard = GetCard(_topCardOfDrawDeckID);
+                Button button = topCard.GetComponent<BaseCardUI>().GetButton();
+                button.interactable = CanDrawCard();
+                
+                // Let active player draw the top card of the draw deck by clicking it
+                button.onClick.RemoveAllListeners();
+                button.onClick.AddListener(() =>
+                {
+                    if (CanDrawCard())
+                    {
+                        DrawCardRequested?.Invoke(this, new DrawCardEventArgs { activePlayerDraws = true });
+                    }
+                });
+            }
         }
 
         #endregion

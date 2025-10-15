@@ -62,6 +62,7 @@ namespace View
             DrawCardButton.GetComponent<DrawCardButtonClick>().DrawCardButtonClicked += OnDrawCardButtonClicked;
             EndTurnButton.GetComponent<EndTurnButtonClick>().EndTurnButtonClicked += OnEndTurnButtonClicked;
             ButtonGetterButton.GetComponent<ButtonGetterButtonClick>().ButtonGetterButtonClicked += OnButtonGetterButtonClicked;
+            _gameStateUI.DrawCardRequested += OnDrawCardRequested;
             _gameModel.StartGame();
         }
 
@@ -196,6 +197,25 @@ namespace View
             Debug.Log($"GameView.OnButtonGetterButtonClicked: ButtonGetterButton clicked with id: {e.Id}");
             Button button = _gameStateUI.GetButton(e.Id);
             button.interactable = false;
+        }
+        /// <summary>
+        /// Uniform way of handling draw card requests, whether from player or AI
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <exception cref="NotImplementedException">currently not implemented for cases when a player not in their turn wants to draw</exception>
+        private void OnDrawCardRequested(object sender, DrawCardEventArgs e)
+        {
+            if (e.activePlayerDraws)
+            {
+                _gameModel.ExecuteAtomicCardEffect(AtomicCardEffect.Draw, _gameState.GetCurrentPlayer());
+                Debug.Log($"GameView.OnDrawCardRequested: Draw card requested for active player {_gameState.GetCurrentPlayer()}");
+            }
+            else
+            {
+                throw new NotImplementedException("GameView.OnDrawCardRequested: Drawing card for non-active player not implemented");
+            }
+            
         }
     }
 }
