@@ -56,7 +56,6 @@ namespace View
             _gameState.ActionUsed += OnActionUsed;
             _gameState.PhaseChanged += OnPhaseChanged;
             _gameState.TopCardInDrawDeckChanged += OnTopCardInDrawDeckChanged;
-            _gameState.CardMovedFromDrawDeck += CardMovedFromDrawDeck;
 
             _gameStateUI = GetComponent<GameStateUI>();
             TestButton.GetComponent<TestClick>().TestButtonClicked += OnTestButtonClicked;
@@ -116,8 +115,14 @@ namespace View
             }
             //update the deck tag of the card
             card.GetComponent<BaseCardUI>().SetDeck(e.NewDeck);
+            Debug.Log($"GameView: OnCardMoved: Card {e.CardId} deck tag updated to {e.NewDeck}");
 
-
+            //drawing card from draw deck to a player's hand
+            if (e.Origin == Deck.DrawDeck && e.NewDeck == Deck.Player1Hand || e.NewDeck == Deck.Player2Hand)
+            {
+                _gameStateUI.UpdateDrawnCardEventListeners(e.CardId);
+                Debug.Log($"GameView: OnCardMoved: Card {e.CardId} moved from draw deck to a player's hand");
+            }
             //reposition the other cards in the original deck if needed
             if (e.OriginNeedsAdjustment)
             {
@@ -163,11 +168,6 @@ namespace View
 
 
             Debug.Log($"GameView: OnTopCardInDrawDeckChanged: Top card in draw deck changed to {e.NewTopCardInDrawDeckId}");
-        }
-        private void CardMovedFromDrawDeck(object sender, CardMovedFromDrawDeckEventArgs e)
-        {
-            _gameStateUI.UpdateDrawnCardEventListeners(e.MovedCardId);
-            Debug.Log($"GameView: CardMovedFromDrawDeck: Card {e.MovedCardId} moved from draw deck to a player's hand");
         }
         #endregion
         private void AdjustOriginDeckUI(CardMovedEventArgs e)

@@ -185,6 +185,11 @@ namespace Model
             }
         }
 
+        /// <summary>
+        /// Returns true if the deck has a limit on the number of cards it can contain
+        /// </summary>
+        /// <param name="deck">deck</param>
+        /// <returns>True if yes, no otherwise</returns>
         public bool IsDeckWithLimit(Deck deck) {             
             switch (deck)
             {
@@ -253,36 +258,19 @@ namespace Model
                 Debug.Log($"GameState: RepositionCards: Card {cards[i + fromWhichPosition].CardId} 's position value set to {i + fromWhichPosition}");
             }
         }
-
+        /// <summary>
+        /// Sets the CardPosition value of the card as the last in the destination deck. Sets to -1 if the deck has no limit
+        /// </summary>
+        /// <param name="card"></param>
+        /// <param name="destination"></param>
         private void SetCardPosition(BaseCard card, Deck destination)
         {
-            switch (destination)
+            if (IsDeckWithLimit(destination))
             {
-                case Deck.Player1Hand:
-                    card.SetCardPosition(GetCardsFromDeck(destination).Count-1);
-                    break;
-                case Deck.Player2Hand:
-                    card.SetCardPosition(GetCardsFromDeck(destination).Count - 1);
-                    break;
-                case Deck.Player1Field:
-                    card.SetCardPosition(GetCardsFromDeck(destination).Count - 1);
-                    break;
-                case Deck.Player2Field:
-                    card.SetCardPosition(GetCardsFromDeck(destination).Count - 1);
-                    break;
-                case Deck.AttackableMonsters:
-                    card.SetCardPosition(GetCardsFromDeck(destination).Count - 1);
-                    break;
-                case Deck.Player1SlainMonsters:
-                    card.SetCardPosition(GetCardsFromDeck(destination).Count - 1);
-                    break;
-                case Deck.Player2SlainMonsters:
-                    card.SetCardPosition(GetCardsFromDeck(destination).Count - 1);
-                    break;
-                default:
-                    card.SetCardPosition(-1);
-                    break;
+                card.SetCardPosition(GetCardsFromDeck(destination).Count - 1);
+                return;
             }
+            card.SetCardPosition(-1);
         }
         #endregion
     }
