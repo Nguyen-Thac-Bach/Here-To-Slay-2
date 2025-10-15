@@ -28,7 +28,7 @@ namespace View
         void OnDrawCardButtonClicked()
         {
             DrawCardButtonClicked?.Invoke(this, new EventArgs());
-            Debug.Log("DrawCardButtonClick: OnDrawCardButtonClicked: Button clicked");
+            Debug.Log("DrawCardButtonClick.OnDrawCardButtonClicked: Button clicked");
         }
     }
 }

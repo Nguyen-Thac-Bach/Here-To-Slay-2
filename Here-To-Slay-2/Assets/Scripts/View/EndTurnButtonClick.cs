@@ -28,7 +28,7 @@ namespace View
         void OnEndTurnButtonClicked()
         {
             EndTurnButtonClicked?.Invoke(this, new EventArgs());
-            Debug.Log("DrawCardButtonClick: OnDrawCardButtonClicked: Button clicked");
+            Debug.Log("EndTurnButtonClick.OnEndTurnButtonClicked: Button clicked");
         }
     }
 }

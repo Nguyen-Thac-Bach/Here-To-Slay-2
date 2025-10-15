@@ -49,7 +49,7 @@ namespace View {
         public void SetDeck(Deck deck)
         {
             _deck = deck;
-            Debug.Log($"DeckTagUI: SetDeck: Deck set to {_deck}");
+            Debug.Log($"BaseCardUI.SetDeck: Deck set to {_deck}");
         }
         /// <summary>
         /// Only set it at the start of the game, when the card is created
@@ -58,23 +58,23 @@ namespace View {
         public void SetId(int id)
         {
             _id = id;
-            Debug.Log($"DeckTagUI: SetId: Id set to {_id}");
+            Debug.Log($"BaseCardUI.SetId: Id set to {_id}");
         }
         public void SetIsFaceUp(bool isFaceUp)
         {
             _isFaceUp = isFaceUp;
-            Debug.Log($"DeckTagUI: SetIsFaceUp: IsFaceUp set to {_isFaceUp}");
+            Debug.Log($"BaseCardUI.SetIsFaceUp: IsFaceUp set to {_isFaceUp}");
         }
         public void SetIsTopCardInDrawDeck(bool isTopCardInDrawDeck)
         {
             _isTopCardInDrawDeck = isTopCardInDrawDeck;
-            Debug.Log($"DeckTagUI: SetIsTopCardInDrawDeck: IsTopCardInDrawDeck set to {_isTopCardInDrawDeck}");
+            Debug.Log($"BaseCardUI.SetIsTopCardInDrawDeck: IsTopCardInDrawDeck set to {_isTopCardInDrawDeck}");
         }
         #endregion
         public Button GetButton()
         {
             GameObject overlay = transform.Find(_buttonLocation).gameObject;
-            Debug.Log($"HeroCardUI: GetButton: Button will be found in: {overlay.name}");
+            Debug.Log($"BaseCardUI.GetButton: Button will be found in: {overlay.name}");
             return overlay.GetComponent<Button>();
         }
         #region Private methods

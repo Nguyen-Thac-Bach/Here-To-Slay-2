@@ -35,7 +35,7 @@ namespace View
         public void AddCard(GameObject card)
         {
             _cardList.Add(card);
-            Debug.Log($"CardList: Added card: {card.GetComponent<BaseCardUI>().Id}");
+            Debug.Log($"GameStateUI.AddCard: CardList: Added card: {card.GetComponent<BaseCardUI>().Id}");
         }
         /// <summary>
         /// gets the card object with the given id
@@ -81,21 +81,21 @@ namespace View
         {
             _currentPhaseUI = phase;
             UpdateCardEventListenersOnPhaseChange();
-            Debug.Log($"GameStateUI: SetCurrentPhaseUI: Phase set to {phase}");
+            Debug.Log($"GameStateUI.SetCurrentPhaseUI: Phase set to {phase}");
             UpdatePhase_Player_ActionText();
         }
         public void SetTopCardInDrawDeckID(int id)
         {
             _topCardOfDrawDeckID = id;
             UpdateTopCardInDrawDeckCardEventListener(id);
-            Debug.Log($"GameStateUI: SetTopCardInDrawDeckID: Top card in draw deck set to {id}");
+            Debug.Log($"GameStateUI.SetTopCardInDrawDeckID: Top card in draw deck set to {id}");
         }
         public void UpdateDrawnCardEventListeners(int id)
         {
             GameObject card = GetCard(id);
             Button button = card.GetComponent<BaseCardUI>().GetButton();
             button.onClick.RemoveAllListeners();
-            button.onClick.AddListener(() => Debug.Log($"GameStateUI: UpdateDrawnCardEventListener: Card {id} clicked"));
+            button.onClick.AddListener(() => Debug.Log($"GameStateUI.UpdateDrawnCardEventListener: Card {id} clicked"));
             bool drawnDuringOwnTurn;
             if (_currentPlayerUI == Player.Player1)
             {
@@ -107,7 +107,7 @@ namespace View
             }
             bool isChoosingActionPhase = _currentPhaseUI == GamePhase.ChoosingAction;
             button.interactable = drawnDuringOwnTurn && isChoosingActionPhase;
-            Debug.Log($"GameStateUI: UpdateDrawnCardEventListeners: Updated event listeners for card {id}. Interactable = drawnDuringOwnTurn({drawnDuringOwnTurn}) && isChooingActionPhase({isChoosingActionPhase})");
+            Debug.Log($"GameStateUI.UpdateDrawnCardEventListeners: Updated event listeners for card {id}. Interactable = drawnDuringOwnTurn({drawnDuringOwnTurn}) && isChooingActionPhase({isChoosingActionPhase})");
         }
         public Button GetButton(int id)
         {
@@ -121,7 +121,7 @@ namespace View
                 $"Player: {_currentPlayerUI}\n" +
                 $"Actions: {_remainingActionsUI}\n" +
                 $"Phase: {_currentPhaseUI}";
-            Debug.Log($"GameStateUI: UpdatePlayerAndActionText: Updated text to: Player: {_currentPlayerUI}, Actions: {_remainingActionsUI}, Phase: {_currentPhaseUI}");
+            Debug.Log($"GameStateUI.UpdatePlayerAndActionText: Updated text to: Player: {_currentPlayerUI}, Actions: {_remainingActionsUI}, Phase: {_currentPhaseUI}");
         }
         private void UpdateCardEventListenersOnPhaseChange()
         {
@@ -153,10 +153,10 @@ namespace View
             GameObject card = GetCard(id);
             Button button = card.GetComponent<BaseCardUI>().GetButton();
             button.onClick.RemoveAllListeners();
-            button.onClick.AddListener(() => Debug.Log($"GameStateUI: UpdateTopCardInDrawDeckCardEventListener: Card {id} clicked"));
+            button.onClick.AddListener(() => Debug.Log($"GameStateUI.UpdateTopCardInDrawDeckCardEventListener: Card {id} clicked"));
             bool isChoosingActionPhase = _currentPhaseUI == GamePhase.ChoosingAction;
             button.interactable = isChoosingActionPhase;
-            Debug.Log($"GameStateUI: UpdateTopCardInDrawDeckCardEventListener: Updated event listeners for card {id}. Interactable = isChooingActionPhase({isChoosingActionPhase})");
+            Debug.Log($"GameStateUI.UpdateTopCardInDrawDeckCardEventListener: Updated event listeners for card {id}. Interactable = isChooingActionPhase({isChoosingActionPhase})");
         }
 
         private void ResetCardEventListeners()
@@ -167,7 +167,7 @@ namespace View
                 button.onClick.RemoveAllListeners();
                 button.interactable = false;
             }
-            Debug.Log($"GameStateUI: ResetCardEventListeners: Removed all listeners and set interactable to false for all cards");
+            Debug.Log($"GameStateUI.ResetCardEventListeners: Removed all listeners and set interactable to false for all cards");
         }
         private void ListenForActivation(Deck deck)
         {
@@ -175,10 +175,10 @@ namespace View
             foreach (GameObject card in cardsInDeck)
             {
                 Button button = card.GetComponent<BaseCardUI>().GetButton();
-                button.onClick.AddListener(() => Debug.Log($"GameStateUI: ListenForActivation: Card {card.GetComponent<BaseCardUI>().Id} clicked"));
+                button.onClick.AddListener(() => Debug.Log($"GameStateUI.ListenForActivation: Card {card.GetComponent<BaseCardUI>().Id} clicked"));
                 button.interactable = true;
             }
-            Debug.Log($"GameStateUI: ListenForActivation: Added listeners and set interactable to true for all cards in deck {deck}");
+            Debug.Log($"GameStateUI.ListenForActivation: Added listeners and set interactable to true for all cards in deck {deck}");
         }
         /// <summary>
         /// Only has monster type cards

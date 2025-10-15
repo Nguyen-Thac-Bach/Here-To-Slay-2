@@ -23,18 +23,18 @@ namespace Model
         private void Start()
         {
             CreateHeroes();
-            Debug.Log("CreateCardsFromJson: Start: Finished creating all cards");
+            Debug.Log("CreateCardsFromJson.Start: Finished creating all cards");
             /*List<BaseCard> cards = CardManagerModel.Instance.GetCards();
             foreach (BaseCard card in cards)
             {
-                Debug.Log($"CreateCardsFromJson: Start: Card: {card.Name} is in deck: {card.Deck}");
+                Debug.Log($"CreateCardsFromJson.Start: Card: {card.Name} is in deck: {card.Deck}");
             }*/
             
         }
         private void Update()
         {
             //Only invoke event in update so that other scripts have time to subscribe to it
-            Debug.Log("CreateCardsFromJson: Update: Invoking CardsCreated event");
+            Debug.Log("CreateCardsFromJson.Update: Invoking CardsCreated event");
             CardsCreated?.Invoke(this, new CardsCreatedEventArgs());
             this.enabled = false;
         }
@@ -55,14 +55,14 @@ namespace Model
                     Enum.TryParse<HeroClass>(hero.heroClass, out HeroClass currentHeroClass) ? currentHeroClass : HeroClass.none,
                     false);
                 GameState.Instance.AddCard(heroCard);
-                Debug.Log($"CreateCardsFromJson: Added hero card: {hero.name} to CardManagerModel");
+                Debug.Log($"CreateCardsFromJson.CreateHeroes: Added hero card: {hero.name} to CardManagerModel");
 
                 //2. Create the card in the view
                 GameObject HeroCardObject = Instantiate(HeroCardPrefab, CardParent.transform);
                 HeroCardObject.name = hero.id + ":" +hero.name;
                 //HeroCardUI
                 HeroCardObject.GetComponent<HeroCardUI>().SetHeroData(hero.id, hero.name, hero.heroClass, hero.description, hero.minRoll);
-                Debug.Log($"CreateCardsFromJson: Created hero card: {hero.name}");
+                Debug.Log($"CreateCardsFromJson.CreateHeroes: Created hero card: {hero.name}");
                 //BaseCardUI
                 HeroCardObject.GetComponent<BaseCardUI>().SetDeck(Deck.DrawDeck);
                 HeroCardObject.GetComponent<BaseCardUI>().SetId(hero.id);
@@ -71,7 +71,7 @@ namespace Model
                 HeroCardObject.GetComponent<BaseCardUI>().SetIsTopCardInDrawDeck(false);
 
                 ViewManager.GetComponent<GameStateUI>().AddCard(HeroCardObject);
-                Debug.Log("CreateCardsFromJson: Added hero card to GameStateUI");
+                Debug.Log("CreateCardsFromJson.CreateHeroes: Added hero card to GameStateUI");
             }
 
         }

@@ -14,7 +14,7 @@ namespace Util
         void Update()
         {
             button.GetComponentInChildren<TextMeshProUGUI>().text = newName;
-            Debug.Log("Button name changed to: " + newName);
+            Debug.Log($"RenameButton.Rename: Button name changed to: {newName}");
             this.enabled = false;
         }
     }

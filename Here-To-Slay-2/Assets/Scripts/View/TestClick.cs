@@ -32,7 +32,7 @@ namespace View
         {
             TestButtonClicked?.Invoke(Deck, new TestButtonClickedEventArgs { CardId = CardId, Deck = Deck });
             CardId++;
-            Debug.Log("TestClick: TestButtonClicked: Button clicked");
+            Debug.Log("TestClick.TestButtonClicked: Button clicked");
         }
     }
 }

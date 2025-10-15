@@ -82,7 +82,7 @@ namespace View {
             _heroClass = heroClass;
             _heroDescription = heroDescription;
             _rollRequirement = rollRequirement;
-            Debug.Log($"HeroCardUI: SetHeroData: Hero name: {heroName}, Hero class: {heroClass}, Hero description: {heroDescription}, Roll requirement: {rollRequirement}");
+            Debug.Log($"HeroCardUI.SetHeroData: Hero name: {heroName}, Hero class: {heroClass}, Hero description: {heroDescription}, Roll requirement: {rollRequirement}");
             SetData();
             _dataReceived = true;
         }
@@ -122,7 +122,7 @@ namespace View {
             _textComponents[1].GetComponent<TextMeshProUGUI>().text = $"{_cardTypePrefix} {HeroClass}";
             _textComponents[2].GetComponent<TextMeshProUGUI>().text = HeroDescription;
             _textComponents[3].GetComponent<TextMeshProUGUI>().text = RollRequirement;
-            Debug.Log("HeroCardUI: SetData: Data set");
+            Debug.Log("HeroCardUI.SetData: Data set");
 
         }
         /// <summary>

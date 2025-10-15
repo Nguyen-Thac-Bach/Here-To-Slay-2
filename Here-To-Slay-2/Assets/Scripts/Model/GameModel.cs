@@ -24,7 +24,7 @@ namespace Model
         private void Start()
         {
             _gameState = GameState.Instance;
-            Debug.Log("GameModel: Start: GameModel started");
+            Debug.Log("GameModel.Start: GameModel started");
             _createCardsFromJson = GetComponent<CreateCardsFromJson>();
             _createCardsFromJson.CardsCreated += OnCardsCreated;
 
@@ -88,7 +88,7 @@ namespace Model
         private void ExecuteDrawEffect(Player player)
         {
             int drawCardID = _gameState.GetTopCardFromDrawDeck().CardId;
-            Debug.Log($"GameModel: ExecuteDrawEffect: Player {player} drew card {drawCardID}");
+            Debug.Log($"GameModel.ExecuteDrawEffect: Player {player} drew card {drawCardID}");
             MoveCard(drawCardID, player == Player.Player1 ? Deck.Player1Hand : Deck.Player2Hand);
         }
         //private void ExecuteRecallEffect()
@@ -144,7 +144,7 @@ namespace Model
             #region Event Handlers
             private void OnCardsCreated(object sender, CardsCreatedEventArgs e)
         {
-            Debug.Log("GameModel: OnCardsCreated: Cards created event received, probably from CreateCardsFromJson");
+            Debug.Log("GameModel.OnCardsCreated: Cards created event received, probably from CreateCardsFromJson");
         }
         #endregion
     }

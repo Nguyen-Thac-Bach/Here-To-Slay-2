@@ -29,7 +29,7 @@ namespace View
         void OnButtonGetterButtonClicked()
         {
             ButtonGetterButtonClicked?.Invoke(this, new ButtonGetterButtonGlickedEventArgs { Id = Id });
-            Debug.Log($"ButtonGetterButtonClicked: {Id}");
+            Debug.Log($"ButtonGetterButtonClick.OnButtonClicked: {Id}");
         }
     }
 }

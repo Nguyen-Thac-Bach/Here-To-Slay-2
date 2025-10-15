@@ -34,7 +34,6 @@ namespace Model
         #endregion
         #region Events
         public event EventHandler<CardMovedEventArgs> CardMoved;
-        public event EventHandler<CardMovedFromDrawDeckEventArgs> CardMovedFromDrawDeck;
         public event EventHandler<PlayerChangedEventArgs> PlayerChanged;
         public event EventHandler<ActionUsedEventArgs> ActionUsed;
         public event EventHandler<PhaseChangedEventArgs> PhaseChanged;
@@ -65,7 +64,7 @@ namespace Model
             DrawStartingCards();
             _currentPhase = GamePhase.ChoosingAction;
             PhaseChanged?.Invoke(this, new PhaseChangedEventArgs() { GamePhase = _currentPhase });
-            Debug.Log("GameState: NewGame: New game started");
+            Debug.Log("GameState.StartGame: New game started");
         }
         public void EndTurn()
         {
@@ -117,7 +116,6 @@ namespace Model
                 if (origin == Deck.DrawDeck)
                 {
                     TopCardInDrawDeckChanged?.Invoke(this, new TopCardInDrawDeckChangedEventArgs() { NewTopCardInDrawDeckId = GetTopCardFromDrawDeck().CardId });
-                    CardMovedFromDrawDeck?.Invoke(this, new CardMovedFromDrawDeckEventArgs() { MovedCardId = cardID });
                 }
                 //3. Reposition cards in the origin deck if needed
                 if (originNeedsAdjustment)
@@ -125,24 +123,24 @@ namespace Model
                     RepositionCards(origin, oldCardPosition);
                     List<int> idsToAdjust = GetCardsFromDeck(origin).Select(cd => cd.CardId).ToList();
                     List<int> adjustedPositions = GetCardsFromDeck(origin).Select(cd => cd.CardPosition).ToList();
-                    Debug.Log($"GameState: MoveCard: idsToAdjust: {string.Join(",", idsToAdjust)}");
-                    Debug.Log($"GameState: MoveCard: adjustedPositions: {string.Join(",", adjustedPositions)}");
+                    Debug.Log($"GameState.MoveCard: idsToAdjust: {string.Join(",", idsToAdjust)}");
+                    Debug.Log($"GameState.MoveCard: adjustedPositions: {string.Join(",", adjustedPositions)}");
                     CardMoved?.Invoke(this, new CardMovedEventArgs() { Origin = origin, CardId = cardID, NewDeck = destination, NewPosition = newPosition, OriginNeedsAdjustment = originNeedsAdjustment, IdsToAdjust = idsToAdjust, AdjustedPositions = adjustedPositions });
                 }
                 else
                 {
                     CardMoved?.Invoke(this, new CardMovedEventArgs() { Origin = origin, CardId = cardID, NewDeck = destination, NewPosition = newPosition, OriginNeedsAdjustment = originNeedsAdjustment });
                 }
-                Debug.Log(cardID + " moved to " + destination.ToString());
+                Debug.Log($"GameState.MoveCard: {cardID} moved to {destination.ToString()}");
             }
             else {                 
-                Debug.Log("Deck is full");
+                Debug.Log($"GameState.MoveCard: Deck {destination} is full");
             }
         }
 
         public Player GetCurrentPlayer()
         {
-            Debug.Log("Current player: " + _currentPlayer.ToString());
+            Debug.Log($"GameState.GetCurrentPlayer: Current player: {_currentPlayer.ToString()}");
             return _currentPlayer;
             
         }
@@ -151,7 +149,7 @@ namespace Model
         {
             _currentPlayer = _currentPlayer == Player.Player1 ? Player.Player2 : Player.Player1;
             PlayerChanged?.Invoke(this, new PlayerChangedEventArgs() { Player = _currentPlayer });  
-            Debug.Log("Current player: " + _currentPlayer.ToString());
+            Debug.Log($"GameState.SetToNextPlayer: Current player: {_currentPlayer.ToString()}");
             _currentPhase = GamePhase.ChoosingAction;
             PhaseChanged?.Invoke(this, new PhaseChangedEventArgs() { GamePhase = _currentPhase });
         }
@@ -179,7 +177,7 @@ namespace Model
             }
             else
             {
-                Debug.Log("Not enough actions");
+                Debug.Log("GameState.UseAction: Not enough actions");
                 throw new System.Exception("Not enough actions");
                 
             }
@@ -214,7 +212,7 @@ namespace Model
                 MoveCard(GetTopCardFromDrawDeck().CardId, Deck.Player1Hand);
                 MoveCard(GetTopCardFromDrawDeck().CardId, Deck.Player2Hand);
             }
-            Debug.Log("GameState: DrawStartingCards: Starting cards drawn");
+            Debug.Log("GameState.DrawStartingCards: Starting cards drawn");
 
         }
         private bool DeckNotFull(Deck deck)
@@ -248,14 +246,14 @@ namespace Model
         /// <remarks> only relevant for decks with a limit on the number of cards: hand, field, attackableMonsters</remarks>
         private void RepositionCards(Deck origin, int fromWhichPosition)
         {
-            Debug.Log($"GameState: RepositionCards: Repositioning cards in {origin} from position {fromWhichPosition}");
+            Debug.Log($"GameState.RepositionCards: Repositioning cards in {origin} from position {fromWhichPosition}");
             List<BaseCard> cards = GetCardsFromDeck(origin);
             int cardsToReposition = cards.Count - fromWhichPosition;
-            Debug.Log($"GameState: RepositionCards: Cards to reposition: {cardsToReposition}");
+            Debug.Log($"GameState.RepositionCards: Cards to reposition: {cardsToReposition}");
             for (int i = 0; i < cardsToReposition; i++)
             {
                 cards[i + fromWhichPosition].SetCardPosition(i + fromWhichPosition);
-                Debug.Log($"GameState: RepositionCards: Card {cards[i + fromWhichPosition].CardId} 's position value set to {i + fromWhichPosition}");
+                Debug.Log($"GameState.RepositionCards: Card {cards[i + fromWhichPosition].CardId} 's position value set to {i + fromWhichPosition}");
             }
         }
         /// <summary>

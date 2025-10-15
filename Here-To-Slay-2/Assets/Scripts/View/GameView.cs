@@ -101,7 +101,7 @@ namespace View
             if (e.NewPosition == -1)
             {
                 card.transform.SetParent(GetDeckObject(e.NewDeck).transform);
-                Debug.Log($"GameView: OnCardMoved: Card {e.CardId} moved to {e.NewDeck}");
+                Debug.Log($"GameView.OnCardMoved: Card {e.CardId} moved to {e.NewDeck}");
             }
             //for deck with a limit size
             else
@@ -110,18 +110,18 @@ namespace View
                 GameObject deckObject = GetDeckObject(e.NewDeck);
                 GameObject cardPositionObject = deckObject.transform.GetChild(e.NewPosition).gameObject;
                 card.transform.SetParent(cardPositionObject.transform);
-                Debug.Log($"GameView: OnCardMoved: Card {e.CardId} moved to {e.NewDeck}: {e.NewPosition}");
+                Debug.Log($"GameView.OnCardMoved: Card {e.CardId} moved to {e.NewDeck}: {e.NewPosition}");
 
             }
             //update the deck tag of the card
             card.GetComponent<BaseCardUI>().SetDeck(e.NewDeck);
-            Debug.Log($"GameView: OnCardMoved: Card {e.CardId} deck tag updated to {e.NewDeck}");
+            Debug.Log($"GameView.OnCardMoved: Card {e.CardId} deck tag updated to {e.NewDeck}");
 
             //drawing card from draw deck to a player's hand
             if (e.Origin == Deck.DrawDeck && e.NewDeck == Deck.Player1Hand || e.NewDeck == Deck.Player2Hand)
             {
                 _gameStateUI.UpdateDrawnCardEventListeners(e.CardId);
-                Debug.Log($"GameView: OnCardMoved: Card {e.CardId} moved from draw deck to a player's hand");
+                Debug.Log($"GameView.OnCardMoved: Card {e.CardId} moved from draw deck to a player's hand");
             }
             //reposition the other cards in the original deck if needed
             if (e.OriginNeedsAdjustment)
@@ -135,30 +135,30 @@ namespace View
         private void OnDrawCardButtonClicked(object sender, EventArgs e)
         {
             _gameModel.ExecuteAtomicCardEffect(AtomicCardEffect.Draw, _gameState.GetCurrentPlayer());
-            Debug.Log($"GameView: OnDrawCardButtonClicked: Draw card button clicked, player {_gameState.GetCurrentPlayer()} drew a card");
+            Debug.Log($"GameView.OnDrawCardButtonClicked: Draw card button clicked, player {_gameState.GetCurrentPlayer()} drew a card");
         }
 
         private void OnEndTurnButtonClicked(object sender, EventArgs e)
         {
             _gameModel.EndTurn();
-            Debug.Log($"GameView: OnEndTurnButtonClicked: End turn button clicked");
+            Debug.Log($"GameView.OnEndTurnButtonClicked: End turn button clicked");
         }
 
         private void OnPlayerChanged(object sender, PlayerChangedEventArgs e)
         {
             _gameStateUI.SetCurrentPlayerUI(e.Player);
-            Debug.Log($"GameView: OnPlayerChanged: Player changed to {e.Player}");
+            Debug.Log($"GameView.OnPlayerChanged: Player changed to {e.Player}");
         }
 
         private void OnActionUsed(object sender, ActionUsedEventArgs e)
         {
             _gameStateUI.SetRemainingActionsUI(e.RemainingActions);
-            Debug.Log($"GameView: OnActionUsed: Remaining actions: {e.RemainingActions}");
+            Debug.Log($"GameView.OnActionUsed: Remaining actions: {e.RemainingActions}");
         }
         private void OnPhaseChanged(object sender, PhaseChangedEventArgs e)
         {
             _gameStateUI.SetCurrentPhaseUI(e.GamePhase);
-            Debug.Log($"GameView: OnPhaseChanged: Phase changed to {e.GamePhase}");
+            Debug.Log($"GameView.OnPhaseChanged: Phase changed to {e.GamePhase}");
         }
         private void OnTopCardInDrawDeckChanged(object sender, TopCardInDrawDeckChangedEventArgs e)
         {
@@ -167,15 +167,15 @@ namespace View
             topCard.transform.SetAsLastSibling();
 
 
-            Debug.Log($"GameView: OnTopCardInDrawDeckChanged: Top card in draw deck changed to {e.NewTopCardInDrawDeckId}");
+            Debug.Log($"GameView.OnTopCardInDrawDeckChanged: Top card in draw deck changed to {e.NewTopCardInDrawDeckId}");
         }
         #endregion
         private void AdjustOriginDeckUI(CardMovedEventArgs e)
         {
-            Debug.Log($"GameView: OnCardMoved: Readjusting origin deck");
-            Debug.Log($"GameView: OnCardMoved: CardMovedEventArgs values:");
-            Debug.Log($"GameView: OnCardMoved: IdsToAdjust: {string.Join(",", e.IdsToAdjust)}");
-            Debug.Log($"GameView: OnCardMoved: AdjustedPositions: {string.Join(",", e.AdjustedPositions)}");
+            Debug.Log($"GameView.OnCardMoved: Readjusting origin deck");
+            Debug.Log($"GameView.OnCardMoved: CardMovedEventArgs values:");
+            Debug.Log($"GameView.OnCardMoved: IdsToAdjust: {string.Join(",", e.IdsToAdjust)}");
+            Debug.Log($"GameView.OnCardMoved: AdjustedPositions: {string.Join(",", e.AdjustedPositions)}");
             for (int i = 0; i < e.AdjustedPositions.Count(); i++)
             {
                 int id = e.IdsToAdjust[i];
@@ -183,7 +183,7 @@ namespace View
                 GameObject deckObject = GetDeckObject(e.Origin);
                 GameObject cardPositionObject = deckObject.transform.GetChild(e.AdjustedPositions[i]).gameObject;
                 cardToReposition.transform.SetParent(cardPositionObject.transform);
-                Debug.Log($"GameView: OnCardMoved: Card {id} repositioned to {e.Origin}: {e.AdjustedPositions[i]}");
+                Debug.Log($"GameView.OnCardMoved: Card {id} repositioned to {e.Origin}: {e.AdjustedPositions[i]}");
             }
         }
 
@@ -193,7 +193,7 @@ namespace View
         }
         private void OnButtonGetterButtonClicked(object sender, ButtonGetterButtonGlickedEventArgs e)
         {
-            Debug.Log($"GameView: OnButtonGetterButtonClicked: ButtonGetterButton clicked with id: {e.Id}");
+            Debug.Log($"GameView.OnButtonGetterButtonClicked: ButtonGetterButton clicked with id: {e.Id}");
             Button button = _gameStateUI.GetButton(e.Id);
             button.interactable = false;
         }
