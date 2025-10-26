@@ -203,6 +203,10 @@ namespace Model
                     return false;
             }
         }
+        public GamePhase GetCurrentPhase()
+        {
+            return _currentPhase;
+        }
         #endregion
         #region Private methods
         private void DrawStartingCards()
@@ -269,6 +273,51 @@ namespace Model
                 return;
             }
             card.SetCardPosition(-1);
+        }
+
+        /// <summary>
+        /// Determines if a card is selectable based on current game state
+        /// </summary>
+        public bool IsCardSelectable(int cardId, GamePhase currentPhase, Player currentPlayer)
+        {
+            BaseCard card = GetCard(cardId);
+            
+            switch (currentPhase)
+            {
+                case GamePhase.ChoosingAction:
+                    return IsCardSelectableInChoosingActionPhase(card, currentPlayer);
+                case GamePhase.RollingDice:
+                case GamePhase.ChoosingTarget:
+                    // Placeholder for future phase-specific logic
+                    return false;
+                default:
+                    return false;
+            }
+        }
+
+        /// <summary>
+        /// Determines card selectability during the Choosing Action phase
+        /// </summary>
+        private bool IsCardSelectableInChoosingActionPhase(BaseCard card, Player currentPlayer)
+        {
+            Deck playerHand = currentPlayer == Player.Player1 ? Deck.Player1Hand : Deck.Player2Hand;
+            Deck playerField = currentPlayer == Player.Player1 ? Deck.Player1Field : Deck.Player2Field;
+
+            return card.Deck == playerHand ||
+                   card.Deck == playerField ||
+                   card.Deck == Deck.AttackableMonsters ||
+                   card.Deck == Deck.DrawDeck;
+        }
+
+        /// <summary>
+        /// Gets all selectable card IDs for the current game state
+        /// </summary>
+        public List<int> GetSelectableCardIds(GamePhase currentPhase, Player currentPlayer)
+        {
+            return _cards
+                .Where(card => IsCardSelectable(card.CardId, currentPhase, currentPlayer))
+                .Select(card => card.CardId)
+                .ToList();
         }
         #endregion
     }

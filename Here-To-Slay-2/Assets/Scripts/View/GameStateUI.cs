@@ -84,7 +84,6 @@ namespace View
         public void SetCurrentPhaseUI(GamePhase phase)
         {
             _currentPhaseUI = phase;
-            UpdateCardEventListenersOnPhaseChange();
             Debug.Log($"GameStateUI.SetCurrentPhaseUI: Phase set to {phase}");
             UpdatePhase_Player_ActionText();
         }
@@ -122,6 +121,33 @@ namespace View
         {
             return _currentPhaseUI == GamePhase.ChoosingAction;
         }
+        /// <summary>
+        /// Updates card interactivity based on a list of selectable card IDs
+        /// </summary>
+        public void UpdateCardInteractivity(List<int> selectableCardIds)
+        {
+            // Reset all card listeners and interactivity
+            ResetCardEventListeners();
+
+            // Update interactivity for selectable cards
+            foreach (GameObject card in _cardList)
+            {
+                int cardId = card.GetComponent<BaseCardUI>().Id;
+                Button button = card.GetComponent<BaseCardUI>().GetButton();
+                
+                // Set interactivity based on selectability
+                button.interactable = selectableCardIds.Contains(cardId);
+                
+                // Add basic click handling
+                if (button.interactable)
+                {
+                    button.onClick.AddListener(() => {
+                        Debug.Log($"GameStateUI: Card {cardId} clicked");
+                        // The actual click handling will be done by GameController
+                    });
+                }
+            }
+        }
         #region Private methods
         private void UpdatePhase_Player_ActionText()
         {
@@ -131,31 +157,7 @@ namespace View
                 $"Phase: {_currentPhaseUI}";
             Debug.Log($"GameStateUI.UpdatePlayerAndActionText: Updated text to: Player: {_currentPlayerUI}, Actions: {_remainingActionsUI}, Phase: {_currentPhaseUI}");
         }
-        private void UpdateCardEventListenersOnPhaseChange()
-        {
-            ResetCardEventListeners();
-            switch (_currentPhaseUI)
-            {
-                case GamePhase.ChoosingAction:
-                    //these decks are clickable: own hand, field; attackablemonsters, drawdeck
-                    //own hand, field
-                    Deck deck = _currentPlayerUI == Player.Player1 ? Deck.Player1Hand : Deck.Player2Hand;
-                    ListenForActivation(deck);
-                    deck = _currentPlayerUI == Player.Player1 ? Deck.Player1Field : Deck.Player2Field;
-                    ListenForActivation(deck);
-                    //attackablemonsters
-                    ListenForAttack();
-                    //drawdeck
-                    ListenForDraw();
-                    break;
-                case GamePhase.RollingDice:
-                    throw new System.Exception($"GameStateUI: UpdateCardEventListeners: not implemented for phase {_currentPhaseUI}");
-                    break;
-                case GamePhase.ChoosingTarget:
-                    throw new System.Exception($"GameStateUI: UpdateCardEventListeners: not implemented for phase {_currentPhaseUI}");
-                    break;
-            }
-        }
+
         private void UpdateTopCardInDrawDeckCardEventListener(int id)
         {
             GameObject card = GetCard(id);
@@ -187,17 +189,8 @@ namespace View
             }
             Debug.Log($"GameStateUI.ResetCardEventListeners: Removed all listeners and set interactable to false for all cards");
         }
-        private void ListenForActivation(Deck deck)
-        {
-            List<GameObject> cardsInDeck = GetCardsInDeck(deck);
-            foreach (GameObject card in cardsInDeck)
-            {
-                Button button = card.GetComponent<BaseCardUI>().GetButton();
-                button.onClick.AddListener(() => Debug.Log($"GameStateUI.ListenForActivation: Card {card.GetComponent<BaseCardUI>().Id} clicked"));
-                button.interactable = true;
-            }
-            Debug.Log($"GameStateUI.ListenForActivation: Added listeners and set interactable to true for all cards in deck {deck}");
-        }
+
+
         /// <summary>
         /// Only has monster type cards
         /// </summary>
@@ -218,21 +211,10 @@ namespace View
         /// <exception cref="System.Exception"></exception>
         private void ListenForDraw()
         {
-            if (_topCardOfDrawDeckID != -1) // Ensure a top card exists
+            // Simplified draw logic
+            if (_topCardOfDrawDeckID != -1)
             {
-                GameObject topCard = GetCard(_topCardOfDrawDeckID);
-                Button button = topCard.GetComponent<BaseCardUI>().GetButton();
-                button.interactable = CanDrawCard();
-                
-                // Let active player draw the top card of the draw deck by clicking it
-                button.onClick.RemoveAllListeners();
-                button.onClick.AddListener(() =>
-                {
-                    if (CanDrawCard())
-                    {
-                        DrawCardRequested?.Invoke(this, new DrawCardEventArgs { activePlayerDraws = true });
-                    }
-                });
+                Debug.Log($"GameStateUI: Top card in draw deck is {_topCardOfDrawDeckID}");
             }
         }
 
