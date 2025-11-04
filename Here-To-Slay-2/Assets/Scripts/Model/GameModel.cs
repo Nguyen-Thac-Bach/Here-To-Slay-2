@@ -8,144 +8,73 @@ using UnityEngine;
 using Components.CustomEventArgs;
 using Components.Enums;
 using Components;
+using Model.Services;
+using ViewModel;
 
 namespace Model
 {
     /// <summary>
-    /// Has all the game data, model classes. Responds to click events coming from GameView by relaying the "commands" to the appropriate model classes
+    /// Lightweight coordinator for game initialization and card loading
+    /// Implements ICardRepository to manage card addition
     /// </summary>
-    /// <remarks>Order of script execution (check Script Execution Order settings): CreateCardsFromJson (once) -> GameModel->GameView </remarks>
-    public class GameModel:MonoBehaviour
+    public class GameModel : MonoBehaviour, ICardRepository
     {
+        private CardViewModel _cardViewModel;
+        private GameState _gameState;
         
-        private CreateCardsFromJson _createCardsFromJson;
-        public GameState _gameState;
-        
+        private void Awake()
+        {
+            // Create a new GameState instance
+            _gameState = new GameState();
+            
+            // Load hero JSON from Resources folder
+            var heroJsonFile = Resources.Load<TextAsset>("JSON/heroes");
+            
+            // Initialize dependencies
+            var cardJsonLoader = new CardJsonLoader(heroJsonFile);
+            _cardViewModel = new CardViewModel(cardJsonLoader, this);
+            
+            // Optional: Subscribe to cards initialized event if needed
+            _cardViewModel.CardsInitialized += OnCardsInitialized;
+        }
+
         private void Start()
         {
-            _gameState = GameState.Instance;
-            Debug.Log("GameModel.Start: GameModel started");
-            _createCardsFromJson = GetComponent<CreateCardsFromJson>();
-            _createCardsFromJson.CardsCreated += OnCardsCreated;
-
-        }
-        #region Public Methods
-        public void MoveCard(int cardID, Deck destination)
-        {
-            _gameState.MoveCard(cardID, destination);
-        }
-        /// <summary>
-        /// Sets up the first turn of the game, assuming all cards are already created and in correct deck
-        /// </summary>
-        public void StartGame()
-        {
+            // Initialize cards
+            _cardViewModel.InitializeCards();
+            
+            // Start the game
             _gameState.StartGame();
         }
-        public void EndTurn()
-        {
-            _gameState.EndTurn();
-        }
+
         /// <summary>
-        /// Executes 1 atomic card effect.
+        /// Implementation of ICardRepository to add cards to GameState
         /// </summary>
-        /// <param name="effect"></param>
-        /// <param name="effectSourceCardID">which card the effect originates from. Might be needed because the owner of the card is often also affected by the AtomicCardEffect</param>
-        /// <exception cref="NotImplementedException"></exception>
-        public void ExecuteAtomicCardEffect(AtomicCardEffect effect, Player affectedPlayer = Player.None, int effectSourceCardID = -1)
+        public void AddCard(object card)
         {
-
-            switch (effect)
+            // Cast to BaseCard and add to GameState
+            if (card is Components.BaseCard baseCard)
             {
-                
-                //actorRelevant
-                case AtomicCardEffect.Draw:
-                    ExecuteDrawEffect(affectedPlayer);
-                    break;
-                //needsChoosingCard
-                //case AtomicCardEffect.Recall:
-                //    ExecuteRecallEffect();
-                //    break;
-                //needsChoosingCard, actorRelevant
-                case AtomicCardEffect.Discard:
-                    ExecuteDiscardEffect(affectedPlayer);
-                    break;
-                case AtomicCardEffect.Slay:
-                    ExecuteSlayEffect();
-                    break;
-                //needsChoosingCard, needsChoosingDestination, actorRelevant
-                default:
-                    throw new NotImplementedException($"GameModel: ExecuteAtomicCardEffect: Effect {effect} not implemented");
-
+                _gameState.AddCard(baseCard);
+            }
+            else
+            {
+                Debug.LogWarning($"GameModel: Attempted to add non-BaseCard object of type {card.GetType()}");
             }
         }
 
-        #endregion
-        #region Private Methods
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="player">the one who will get the card</param>
-        private void ExecuteDrawEffect(Player player)
+        private void OnCardsInitialized(object sender, System.EventArgs e)
         {
-            int drawCardID = _gameState.GetTopCardFromDrawDeck().CardId;
-            Debug.Log($"GameModel.ExecuteDrawEffect: Player {player} drew card {drawCardID}");
-            MoveCard(drawCardID, player == Player.Player1 ? Deck.Player1Hand : Deck.Player2Hand);
-        }
-        //private void ExecuteRecallEffect()
-        //{
-        //    //TODO: implement when items are implemented
-        //}
-        private void ExecuteDiscardEffect(Player player)
-        {
-            BaseCard cardToDiscard = ChooseCardFromDeck(player == Player.Player1 ? Deck.Player1Hand : Deck.Player2Hand);
-            MoveCard(cardToDiscard.CardId, Deck.DiscardDeck);
-        }
-        private void ExecuteSlayEffect()
-        {
-            //execute slay effect
-            //replenish attackable monsters
-        }
-        /// <summary>
-        /// Prompts the player to choose a card from a given deck. Will probably need to be async
-        /// </summary>
-        /// <param name="deck"></param>
-        /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
-
-        private BaseCard ChooseCardFromDeck(Deck deck)
-        {
-            //if user prompted the card effect, send an event to the view to prompt the user to choose a card
-            //also send which deck the card should be chosen from
-            //return the card chosen by the user
-
-            //if AI prompted the card effect, tell AI to choose a card
-            //return the card chosen by the AI
-            throw new NotImplementedException();
+            Debug.Log("GameModel: Cards have been successfully initialized");
         }
 
-        private Player GetPlayer(int cardID)
+        private void OnDestroy()
         {
-            Deck deck = _gameState.GetCard(cardID).Deck;
-            switch (deck)
-            {
-                case Deck.Player1Hand:
-                case Deck.Player1Field:
-                case Deck.Player1SlainMonsters:
-                    return Player.Player1;
-                case Deck.Player2Hand:
-                case Deck.Player2Field:
-                case Deck.Player2SlainMonsters:
-                    return Player.Player2;
-                default:
-                    return Player.None;
-            }
+            // Unsubscribe to prevent memory leaks
+            _cardViewModel.CardsInitialized -= OnCardsInitialized;
         }
-        #endregion
-            #region Event Handlers
-            private void OnCardsCreated(object sender, CardsCreatedEventArgs e)
-        {
-            Debug.Log("GameModel.OnCardsCreated: Cards created event received, probably from CreateCardsFromJson");
-        }
-        #endregion
+
+        // Expose GameState methods if needed
+        public GameState GetGameState() => _gameState;
     }
 }

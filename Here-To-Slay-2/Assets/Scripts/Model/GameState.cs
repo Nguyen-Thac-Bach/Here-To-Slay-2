@@ -9,18 +9,11 @@ using System.Linq;
 namespace Model
 {
     /// <summary>
-    /// Singleton class that provides methods to access and move cards between decks
+    /// Manages the state of the game, including cards, players, and game progression
     /// </summary>
-    public sealed class GameState
+    public class GameState
     {
         #region Fields
-        private static readonly GameState _instance = new GameState();
-        /// <summary>
-        /// Stores all the cards in the game
-        /// </summary>
-        /// <remarks>
-        /// If performance is a concern, consider using a different data structure, such as a dictionary
-        /// </remarks>
         private List<BaseCard> _cards;
         private const int _maxCardsInHand = 8;
         private const int _maxCardsInField = 5;
@@ -59,11 +52,9 @@ namespace Model
         public void StartGame()
         {
             RefreshActions();
-            _currentPlayer = Player.Player1;
-            PlayerChanged?.Invoke(this, new PlayerChangedEventArgs() { Player = _currentPlayer });
+            SetPlayer(Player.Player1);
             DrawStartingCards();
-            _currentPhase = GamePhase.ChoosingAction;
-            PhaseChanged?.Invoke(this, new PhaseChangedEventArgs() { GamePhase = _currentPhase });
+            SetPlayerPhase(GamePhase.ChoosingAction);
             Debug.Log("GameState.StartGame: New game started");
         }
         public void EndTurn()
@@ -125,7 +116,14 @@ namespace Model
                     List<int> adjustedPositions = GetCardsFromDeck(origin).Select(cd => cd.CardPosition).ToList();
                     Debug.Log($"GameState.MoveCard: idsToAdjust: {string.Join(",", idsToAdjust)}");
                     Debug.Log($"GameState.MoveCard: adjustedPositions: {string.Join(",", adjustedPositions)}");
-                    CardMoved?.Invoke(this, new CardMovedEventArgs() { Origin = origin, CardId = cardID, NewDeck = destination, NewPosition = newPosition, OriginNeedsAdjustment = originNeedsAdjustment, IdsToAdjust = idsToAdjust, AdjustedPositions = adjustedPositions });
+                    CardMoved?.Invoke(this, new CardMovedEventArgs() { 
+                        Origin = origin,
+                        CardId = cardID,
+                        NewDeck = destination,
+                        NewPosition = newPosition,
+                        OriginNeedsAdjustment = originNeedsAdjustment,
+                        IdsToAdjust = idsToAdjust,
+                        AdjustedPositions = adjustedPositions });
                 }
                 else
                 {
@@ -144,11 +142,19 @@ namespace Model
             return _currentPlayer;
             
         }
-
+        /// <summary>
+        /// Sets the current player to the next one and notifies subscribers (switches between Player1 and Player2)
+        /// </summary>
         public void SetToNextPlayer()
         {
-            _currentPlayer = _currentPlayer == Player.Player1 ? Player.Player2 : Player.Player1;
-            PlayerChanged?.Invoke(this, new PlayerChangedEventArgs() { Player = _currentPlayer });  
+            if (_currentPlayer == Player.Player1)
+            {
+                SetPlayer(Player.Player2);
+            }
+            else
+            {
+                SetPlayer(Player.Player1);
+            }
             Debug.Log($"GameState.SetToNextPlayer: Current player: {_currentPlayer.ToString()}");
             _currentPhase = GamePhase.ChoosingAction;
             PhaseChanged?.Invoke(this, new PhaseChangedEventArgs() { GamePhase = _currentPhase });
@@ -161,7 +167,7 @@ namespace Model
         /// <summary>
         /// Typically called at the start of a new turn
         /// </summary>
-        public void RefreshActions()
+        private void RefreshActions()
         {
             _remainingActions = _maxActions;
             ActionUsed?.Invoke(this, new ActionUsedEventArgs() { RemainingActions = _remainingActions });
@@ -218,6 +224,15 @@ namespace Model
             }
             Debug.Log("GameState.DrawStartingCards: Starting cards drawn");
 
+        }
+        /// <summary>
+        /// Sets the current player and notifies subscribers
+        /// </summary>
+        /// <param name="player"></param>
+        private void SetPlayer(Player player)
+        {
+            _currentPlayer = player;
+            PlayerChanged?.Invoke(this, new PlayerChangedEventArgs() { Player = _currentPlayer });
         }
         private bool DeckNotFull(Deck deck)
         {
@@ -307,6 +322,12 @@ namespace Model
                    card.Deck == playerField ||
                    card.Deck == Deck.AttackableMonsters ||
                    card.Deck == Deck.DrawDeck;
+        }
+
+        private void SetPlayerPhase(GamePhase phase)
+        {
+            _currentPhase = phase;
+            PhaseChanged?.Invoke(this, new PhaseChangedEventArgs() { GamePhase = _currentPhase });
         }
 
         /// <summary>

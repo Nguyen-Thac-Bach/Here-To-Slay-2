@@ -43,6 +43,18 @@ namespace Components {
 
         #region Public methods
 
+        public override string ToString()
+        {
+            string result = 
+                $"Card ID: {_cardId},\n"+
+                $"Name: {_name},\n"+
+                $"Description: {_description},\n"+
+                $"IsFaceUp: {_isFaceUp},\n"+
+                $"Deck: {_deck},\n"+
+                $"CardPosition: {_cardPosition}";
+            return result;
+        }
+
         /// <summary>
         /// Make the card face up
         /// </summary>
