@@ -113,13 +113,66 @@ namespace Model
         {
             return GetCardsFromDeck(Deck.DrawDeck)[0];
         }
+
+        //card movement
+
+        /// <summary>
+        /// Draws a card from the draw deck to the recipient's hand
+        /// </summary>
+        /// <param name="recipient"></param>
+        /// <param name="outOfOwnTurnAllowed">Whether to allow drawing from draw deck outside of own turn. Certain cards may allow this</param>
+        public void DrawFromDrawDeck(Player recipient, bool outOfOwnTurnAllowed = false)
+        {
+            if (!outOfOwnTurnAllowed && recipient != GetCurrentPlayer())
+            {
+                Debug.Log($"GameState.DrawFromDrawDeck: Player {recipient} cannot draw from draw deck during {GetCurrentPlayer()}'s turn");
+                return;
+            }
+            MoveCard(GetTopCardFromDrawDeck().CardId, recipient == Player.Player1 ? Deck.Player1Hand : Deck.Player2Hand);
+
+            Debug.Log($"GameState.DrawFromDrawDeck: Player {recipient} drew a card from the draw deck, currently has {GetCardsFromDeck(recipient == Player.Player1 ? Deck.Player1Hand : Deck.Player2Hand).Count} cards in their hand");
+        }
+
+        /// <summary>
+        /// Plays hero card from the current player's hand to the field
+        /// </summary>
+        /// <param name="cardID">The ID of the card to play</param>
+        /// <param name="player">The player playing the card</param>
+        public void PlayHeroCardFromHand(int cardID, Player player)
+        {
+            if (GetCurrentPlayer() != player)
+            {
+                Debug.Log($"GameState.PlayHeroCardFromHand: Player {player} cannot play hero card during {GetCurrentPlayer()}'s turn");
+                return;
+            }
+
+            if (GetCard(cardID) is not HeroCard)
+            {
+                Debug.Log($"GameState.PlayHeroCardFromHand: Card {cardID} is not a hero card");
+                return;
+            }
+            HeroCard heroCard = (HeroCard)GetCard(cardID);
+            Deck hand = player == Player.Player1 ? Deck.Player1Hand : Deck.Player2Hand;
+            if (heroCard.Deck != hand)
+            {
+                Debug.Log($"GameState.PlayHeroCardFromHand: Card {cardID} is not in {hand}");
+                return;
+            }
+            Deck field = player == Player.Player1 ? Deck.Player1Field : Deck.Player2Field;
+            MoveCard(cardID, field);
+            Debug.Log($"GameState.PlayHeroCardFromHand: Player {player} played hero card {cardID} from their hand, currently has {GetCardsFromDeck(field).Count} cards in their field");
+        }
+
+
+
+
         /// <summary>
         /// Moves card in the persistent data structure
         /// </summary>
         /// <param name="cardID"></param>
         /// <param name="destination"></param>
         /// <returns>None if unsuccessful, otherwise the original deck the card belonged to</returns>
-        public void MoveCard(int cardID, Deck destination)
+        private void MoveCard(int cardID, Deck destination)
         {
             BaseCard card = _cards.Find(card => card.CardId == cardID);
 
@@ -261,8 +314,8 @@ namespace Model
         {
             for (int i = 0; i < _startingHandSize; i++)
             {
-                MoveCard(GetTopCardFromDrawDeck().CardId, Deck.Player1Hand);
-                MoveCard(GetTopCardFromDrawDeck().CardId, Deck.Player2Hand);
+                DrawFromDrawDeck(Player.Player1, outOfOwnTurnAllowed: true);
+                DrawFromDrawDeck(Player.Player2, outOfOwnTurnAllowed: true);
             }
             Debug.Log("GameState.DrawStartingCards: Starting cards drawn");
 

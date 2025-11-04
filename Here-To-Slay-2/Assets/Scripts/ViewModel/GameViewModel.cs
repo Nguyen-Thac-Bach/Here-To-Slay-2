@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using Model;
 using Model.Services;
+using Components.Enums;
 
 namespace ViewModel
 {
@@ -27,6 +28,20 @@ namespace ViewModel
             Debug.Log("CardViewModel.StartGame: Starting game initialization");
             InitializeHeroCards();
             _gameState.StartGame();
+        }
+
+        public void DrawFromDrawDeck(Player recipient, bool outOfOwnTurnAllowed = false)
+        {
+            _gameState.DrawFromDrawDeck(recipient, outOfOwnTurnAllowed);
+        }
+        public void PlayHeroCardFromHand(int cardID, Player player)
+        {
+            _gameState.PlayHeroCardFromHand(cardID, player);
+        }
+
+        public void EndTurn()
+        {
+            _gameState.EndTurn();
         }
 
         private void InitializeHeroCards()
