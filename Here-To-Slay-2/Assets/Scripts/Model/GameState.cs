@@ -40,6 +40,10 @@ namespace Model
         }
         #endregion
         #region Public methods
+        // Game phase management
+        /// <summary>
+        /// Starts the game
+        /// </summary>
         public void StartGame()
         {
             RefreshActions();
@@ -48,11 +52,23 @@ namespace Model
             SetPlayerPhase(GamePhase.ChoosingAction);
             Debug.Log("GameState.StartGame: New game started");
         }
+        /// <summary>
+        /// Ends the current player's turn
+        /// </summary>
         public void EndTurn()
         {
             SetToNextPlayer();
             RefreshActions();
         }
+        /// <summary>
+        /// Gets the current game phase
+        /// </summary>
+        /// <returns>The current game phase</returns>
+        public GamePhase GetCurrentPhase()
+        {
+            return _currentPhase;
+        }
+        /// Card management
         /// <summary>
         /// Adds a card to the persistent data structure
         /// </summary>
@@ -62,19 +78,37 @@ namespace Model
             _cards.Add(card);
         }
 
+        /// <summary>
+        /// Gets a card from the persistent data structure based on the card's ID
+        /// </summary>
+        /// <param name="cardID"></param>
+        /// <returns>The card</returns>
         public BaseCard GetCard(int cardID)
         {
             return _cards.Find(card => card.CardId == cardID);
         }
 
+        /// <summary>
+        /// Gets all cards from the persistent data structure
+        /// </summary>
+        /// <returns>A list of all cards</returns>
         public List<BaseCard> GetCards()
         {
             return _cards;
         }
+        /// <summary>
+        /// Gets all cards from a specific deck
+        /// </summary>
+        /// <param name="deck"></param>
+        /// <returns>A list of all cards in the deck</returns>
         public List<BaseCard> GetCardsFromDeck(Deck deck)
         {
             return _cards.FindAll(card => card.Deck == deck);
         }
+        /// <summary>
+        /// Gets the top card from the draw deck
+        /// </summary>
+        /// <returns>The top card from the draw deck</returns>
         public BaseCard GetTopCardFromDrawDeck()
         {
             return GetCardsFromDeck(Deck.DrawDeck)[0];
@@ -130,60 +164,6 @@ namespace Model
                 Debug.Log($"GameState.MoveCard: Deck {destination} is full");
             }
         }
-
-        public Player GetCurrentPlayer()
-        {
-            Debug.Log($"GameState.GetCurrentPlayer: Current player: {_currentPlayer.ToString()}");
-            return _currentPlayer;
-            
-        }
-        /// <summary>
-        /// Sets the current player to the next one and notifies subscribers (switches between Player1 and Player2)
-        /// </summary>
-        public void SetToNextPlayer()
-        {
-            if (_currentPlayer == Player.Player1)
-            {
-                SetPlayer(Player.Player2);
-            }
-            else
-            {
-                SetPlayer(Player.Player1);
-            }
-            Debug.Log($"GameState.SetToNextPlayer: Current player: {_currentPlayer.ToString()}");
-            _currentPhase = GamePhase.ChoosingAction;
-            PhaseChanged?.Invoke(this, new PhaseChangedEventArgs() { GamePhase = _currentPhase });
-        }
-
-        public int GetRemainingActions()
-        {
-            return _remainingActions;
-        }
-        /// <summary>
-        /// Typically called at the start of a new turn
-        /// </summary>
-        private void RefreshActions()
-        {
-            _remainingActions = _maxActions;
-            ActionUsed?.Invoke(this, new ActionUsedEventArgs() { RemainingActions = _remainingActions });
-        }
-
-        
-
-        public void UseAction(int actionCost)
-        {
-            if(_remainingActions - actionCost >= 0)
-            {
-                _remainingActions -= actionCost;
-            }
-            else
-            {
-                Debug.Log("GameState.UseAction: Not enough actions");
-                throw new System.Exception("Not enough actions");
-                
-            }
-        }
-
         /// <summary>
         /// Returns true if the deck has a limit on the number of cards it can contain
         /// </summary>
@@ -204,12 +184,79 @@ namespace Model
                     return false;
             }
         }
-        public GamePhase GetCurrentPhase()
+        
+        //Player management
+        /// <summary>
+        /// Gets the current player
+        /// </summary>
+        /// <returns>The current player</returns>
+        public Player GetCurrentPlayer()
         {
-            return _currentPhase;
+            Debug.Log($"GameState.GetCurrentPlayer: Current player: {_currentPlayer.ToString()}");
+            return _currentPlayer;
+            
         }
+        /// <summary>
+        /// Sets the current player to the next one and notifies subscribers (switches between Player1 and Player2)
+        /// </summary>
+        private void SetToNextPlayer()
+        {
+            if (_currentPlayer == Player.Player1)
+            {
+                SetPlayer(Player.Player2);
+            }
+            else
+            {
+                SetPlayer(Player.Player1);
+            }
+            Debug.Log($"GameState.SetToNextPlayer: Current player: {_currentPlayer.ToString()}");
+            _currentPhase = GamePhase.ChoosingAction;
+            PhaseChanged?.Invoke(this, new PhaseChangedEventArgs() { GamePhase = _currentPhase });
+        }
+        //Action management
+        /// <summary>
+        /// Gets the remaining actions for the current player
+        /// </summary>
+        /// <returns>The remaining actions</returns>
+        public int GetRemainingActions()
+        {
+            return _remainingActions;
+        }
+        /// <summary>
+        /// Typically called at the start of a new turn
+        /// </summary>
+        private void RefreshActions()
+        {
+            _remainingActions = _maxActions;
+            ActionUsed?.Invoke(this, new ActionUsedEventArgs() { RemainingActions = _remainingActions });
+        }
+
+        
+
+        /// <summary>
+        /// Uses an action
+        /// </summary>
+        /// <param name="actionCost"></param>
+        public void UseAction(int actionCost)
+        {
+            if(_remainingActions - actionCost >= 0)
+            {
+                _remainingActions -= actionCost;
+            }
+            else
+            {
+                Debug.Log("GameState.UseAction: Not enough actions");
+                throw new System.Exception("Not enough actions");
+                
+            }
+        }
+
+        
         #endregion
         #region Private methods
+        /// <summary>
+        /// Draws the starting cards for the current player
+        /// </summary>
         private void DrawStartingCards()
         {
             for (int i = 0; i < _startingHandSize; i++)
@@ -229,6 +276,11 @@ namespace Model
             _currentPlayer = player;
             PlayerChanged?.Invoke(this, new PlayerChangedEventArgs() { Player = _currentPlayer });
         }
+        /// <summary>
+        /// Checks if a deck is not full
+        /// </summary>
+        /// <param name="deck"></param>
+        /// <returns>True if the deck is not full, false otherwise</returns>
         private bool DeckNotFull(Deck deck)
         {
             switch (deck)
