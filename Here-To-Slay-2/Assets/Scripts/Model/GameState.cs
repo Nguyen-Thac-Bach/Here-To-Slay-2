@@ -32,18 +32,9 @@ namespace Model
         public event EventHandler<PhaseChangedEventArgs> PhaseChanged;
         public event EventHandler<TopCardInDrawDeckChangedEventArgs> TopCardInDrawDeckChanged;
         #endregion
-        #region Properties
-        public static GameState Instance
-        {
-            get
-            {
-                return _instance;
-            }
-        }
-        #endregion
         #region Constructors
   
-        private GameState()
+        public GameState()
         {
             _cards = new List<BaseCard>();
         }
@@ -62,6 +53,10 @@ namespace Model
             SetToNextPlayer();
             RefreshActions();
         }
+        /// <summary>
+        /// Adds a card to the persistent data structure
+        /// </summary>
+        /// <param name="card"></param>
         public void AddCard(BaseCard card)
         {
             _cards.Add(card);

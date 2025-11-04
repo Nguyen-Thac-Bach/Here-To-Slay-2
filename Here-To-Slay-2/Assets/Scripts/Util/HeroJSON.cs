@@ -1,6 +1,9 @@
 namespace Util
 {
     [System.Serializable]
+    /// <summary>
+    /// Hero card data structure for JSON deserialization
+    /// </summary>
     public class HeroJSON
     {
         public int id;

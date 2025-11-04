@@ -9,7 +9,7 @@ using UnityEngine.UI;
 using Model;
 using Components.CustomEventArgs;
 using Components.Enums;
-using Controller;
+
 namespace View
 {
     public class GameView : MonoBehaviour
@@ -40,11 +40,10 @@ namespace View
         /// Used to test if GameView can get a button from the scene
         /// </summary>
         public GameObject ButtonGetterButton;
-        private GameModel _gameModel;
+
         private GameState _gameState;
         private GameStateUI _gameStateUI;
-        // Add a reference to GameController
-        [SerializeField] private GameController _gameController;
+
 
 
         #region Events
@@ -53,11 +52,10 @@ namespace View
         private void Start()
         {
             // Existing setup
-            _gameModel = GetComponent<GameModel>();
+
             _gameStateUI = GetComponent<GameStateUI>();
 
-            // Subscribe to game controller events
-            _gameController.CardClicked += OnCardClicked;
+
 
             // Existing event subscriptions
             _gameStateUI.DrawCardRequested += OnDrawCardRequested;
@@ -132,13 +130,13 @@ namespace View
         #region Event Handlers for GameState events
         private void OnDrawCardButtonClicked(object sender, EventArgs e)
         {
-            _gameModel.ExecuteAtomicCardEffect(AtomicCardEffect.Draw, _gameState.GetCurrentPlayer());
+            
             Debug.Log($"GameView.OnDrawCardButtonClicked: Draw card button clicked, player {_gameState.GetCurrentPlayer()} drew a card");
         }
 
         private void OnEndTurnButtonClicked(object sender, EventArgs e)
         {
-            _gameModel.EndTurn();
+
             Debug.Log($"GameView.OnEndTurnButtonClicked: End turn button clicked");
         }
 
@@ -187,7 +185,7 @@ namespace View
 
         private void OnTestButtonClicked(object sender, TestButtonClickedEventArgs e)
         {
-            _gameModel.MoveCard(e.CardId, e.Deck);
+
         }
         private void OnButtonGetterButtonClicked(object sender, ButtonGetterButtonGlickedEventArgs e)
         {
@@ -196,14 +194,7 @@ namespace View
             button.interactable = false;
         }
         // Add a method to handle card clicks from the game controller
-        private void OnCardClicked(object sender, CardClickedEventArgs e)
-        {
-            // Implement card click logic here
-            Debug.Log($"GameView: Card {e.CardId} clicked");
-            
-            // Example: You might want to do something specific when a card is clicked
-            // This could involve moving the card, activating an effect, etc.
-        }
+
         /// <summary>
         /// Uniform way of handling draw card requests, whether from player or AI
         /// </summary>
@@ -214,8 +205,7 @@ namespace View
         {
             // Existing draw card logic
             Debug.Log("GameView: Draw card requested");
-            _gameModel.ExecuteAtomicCardEffect(AtomicCardEffect.Draw, 
-                _gameModel._gameState.GetCurrentPlayer());
+
         }
     }
 }

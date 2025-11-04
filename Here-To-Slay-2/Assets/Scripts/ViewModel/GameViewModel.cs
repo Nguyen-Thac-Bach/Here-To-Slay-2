@@ -5,35 +5,38 @@ using Model.Services;
 
 namespace ViewModel
 {
-    /// <summary>
-    /// Interface for card management to decouple from specific GameState implementation
-    /// </summary>
-    public interface ICardRepository
-    {
-        void AddCard(object card);
-    }
 
-    public class CardViewModel
+
+    public class GameViewModel
     {
         private readonly ICardJsonLoader _cardJsonLoader;
-        private readonly ICardRepository _cardRepository;
+        private readonly GameState _gameState;
         
         public event EventHandler CardsInitialized;
 
-        public CardViewModel(ICardJsonLoader cardJsonLoader, ICardRepository cardRepository)
+        public GameViewModel(ICardJsonLoader cardJsonLoader, GameState cardRepository)
         {
             _cardJsonLoader = cardJsonLoader ?? throw new ArgumentNullException(nameof(cardJsonLoader));
-            _cardRepository = cardRepository ?? throw new ArgumentNullException(nameof(cardRepository));
+            _gameState = cardRepository ?? throw new ArgumentNullException(nameof(cardRepository));
+        }
+        /// <summary>
+        /// Starts the game by initializing hero cards and updating game state
+        /// </summary>
+        public void StartGame()
+        {
+            Debug.Log("CardViewModel.StartGame: Starting game initialization");
+            InitializeHeroCards();
+            _gameState.StartGame();
         }
 
-        public void InitializeCards()
+        private void InitializeHeroCards()
         {
             try 
             {
                 var heroCards = _cardJsonLoader.LoadHeroCards();
                 foreach (var card in heroCards)
                 {
-                    _cardRepository.AddCard(card);
+                    _gameState.AddCard(card);
                 }
                 
                 Debug.Log($"CardViewModel: Initialized {heroCards.Count} hero cards");

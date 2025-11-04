@@ -9,30 +9,33 @@ using Components.CustomEventArgs;
 using Components.Enums;
 using Components;
 using Model.Services;
+using Model;
 using ViewModel;
 
-namespace Model
+namespace App
 {
     /// <summary>
     /// Lightweight coordinator for game initialization and card loading
     /// Implements ICardRepository to manage card addition
     /// </summary>
-    public class GameModel : MonoBehaviour, ICardRepository
+    public class App : MonoBehaviour
     {
-        private CardViewModel _cardViewModel;
+        private GameViewModel _cardViewModel;
         private GameState _gameState;
         
         private void Awake()
         {
+            Debug.Log("App.Awake: Initializing GameState");
             // Create a new GameState instance
             _gameState = new GameState();
-            
+
+            Debug.Log("App.Awake: Loading hero JSON and initializing GameViewModel");
             // Load hero JSON from Resources folder
             var heroJsonFile = Resources.Load<TextAsset>("JSON/heroes");
             
             // Initialize dependencies
             var cardJsonLoader = new CardJsonLoader(heroJsonFile);
-            _cardViewModel = new CardViewModel(cardJsonLoader, this);
+            _cardViewModel = new GameViewModel(cardJsonLoader, _gameState);
             
             // Optional: Subscribe to cards initialized event if needed
             _cardViewModel.CardsInitialized += OnCardsInitialized;
@@ -41,31 +44,13 @@ namespace Model
         private void Start()
         {
             // Initialize cards
-            _cardViewModel.InitializeCards();
-            
-            // Start the game
-            _gameState.StartGame();
-        }
-
-        /// <summary>
-        /// Implementation of ICardRepository to add cards to GameState
-        /// </summary>
-        public void AddCard(object card)
-        {
-            // Cast to BaseCard and add to GameState
-            if (card is Components.BaseCard baseCard)
-            {
-                _gameState.AddCard(baseCard);
-            }
-            else
-            {
-                Debug.LogWarning($"GameModel: Attempted to add non-BaseCard object of type {card.GetType()}");
-            }
+            Debug.Log("App.Start: Starting card initialization");
+            _cardViewModel.StartGame();
         }
 
         private void OnCardsInitialized(object sender, System.EventArgs e)
         {
-            Debug.Log("GameModel: Cards have been successfully initialized");
+            Debug.Log("App.OnCardsInitialized: Cards have been successfully initialized");
         }
 
         private void OnDestroy()
@@ -73,8 +58,5 @@ namespace Model
             // Unsubscribe to prevent memory leaks
             _cardViewModel.CardsInitialized -= OnCardsInitialized;
         }
-
-        // Expose GameState methods if needed
-        public GameState GetGameState() => _gameState;
     }
 }
