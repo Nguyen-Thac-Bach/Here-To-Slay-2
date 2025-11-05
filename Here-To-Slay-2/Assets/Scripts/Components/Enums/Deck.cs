@@ -8,12 +8,16 @@ namespace Components.Enums
         DrawDeck,
         DiscardDeck,
         MonsterDeck,
-        AttackAbleMonsters,
+        AttackableMonsters,
         Player1Hand,
         Player1Field,
+        Player1SlainMonsters,
         Player2Hand,
-        Player2Field
-        //todo: add for player3,4 if implemented
+        Player2Field,
+        Player2SlainMonsters,
+        None
+        //todo: add slain monsters for each player in view as well - 3 limit decks
     }
+
 }
 
