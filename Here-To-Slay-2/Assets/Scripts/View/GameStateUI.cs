@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using Model;
 using Components.Enums;
 using Components.CustomEventArgs;
-using TMPro;
+//using TMPro;
 using System;
 
 namespace View
@@ -151,10 +151,10 @@ namespace View
         #region Private methods
         private void UpdatePhase_Player_ActionText()
         {
-            Phase_Player_ActionText.GetComponent<TextMeshProUGUI>().text = 
+            /*Phase_Player_ActionText.GetComponent<TextMeshProUGUI>().text = 
                 $"Player: {_currentPlayerUI}\n" +
                 $"Actions: {_remainingActionsUI}\n" +
-                $"Phase: {_currentPhaseUI}";
+                $"Phase: {_currentPhaseUI}";*/
             Debug.Log($"GameStateUI.UpdatePlayerAndActionText: Updated text to: Player: {_currentPlayerUI}, Actions: {_remainingActionsUI}, Phase: {_currentPhaseUI}");
         }
 

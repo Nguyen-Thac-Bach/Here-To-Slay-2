@@ -1,6 +1,6 @@
 ﻿using NUnit.Framework;
 using System.Collections.Generic;
-using TMPro;
+//using TMPro;
 using UnityEngine;
 
 using System;
@@ -118,10 +118,10 @@ namespace View {
         private void SetData()
         {
             GetComponents();
-            _textComponents[0].GetComponent<TextMeshProUGUI>().text = HeroName;
+            /*_textComponents[0].GetComponent<TextMeshProUGUI>().text = HeroName;
             _textComponents[1].GetComponent<TextMeshProUGUI>().text = $"{_cardTypePrefix} {HeroClass}";
             _textComponents[2].GetComponent<TextMeshProUGUI>().text = HeroDescription;
-            _textComponents[3].GetComponent<TextMeshProUGUI>().text = RollRequirement;
+            _textComponents[3].GetComponent<TextMeshProUGUI>().text = RollRequirement;*/
             Debug.Log("HeroCardUI.SetData: Data set");
 
         }

@@ -1,4 +1,4 @@
-using TMPro;
+//using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 namespace Util
@@ -13,7 +13,7 @@ namespace Util
         }
         void Update()
         {
-            button.GetComponentInChildren<TextMeshProUGUI>().text = newName;
+            //button.GetComponentInChildren<TextMeshProUGUI>().text = newName;
             Debug.Log($"RenameButton.Rename: Button name changed to: {newName}");
             this.enabled = false;
         }
