@@ -971,28 +971,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 497908371}
-  - component: {fileID: 497908370}
+  - component: {fileID: 497908372}
   m_Layer: 0
-  m_Name: GameController
+  m_Name: App
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &497908370
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 497908369}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 156f8839e14ab904b98effcbd4750fd4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Controller.GameController
-  _gameModel: {fileID: 784761812}
-  _gameStateUI: {fileID: 1102826368}
 --- !u!4 &497908371
 Transform:
   m_ObjectHideFlags: 0
@@ -1008,6 +994,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &497908372
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 497908369}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66942b94894665f4fae5d44debfafe6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Model.GameModel
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -1196,7 +1194,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &548623505
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1925,7 +1923,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &784761810
 Transform:
   m_ObjectHideFlags: 0
@@ -1953,10 +1951,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4150db72c283a024eb073d7c86c8ed4d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ViewManager: {fileID: 1102826365}
-  CardParent: {fileID: 908479190}
-  HeroCardPrefab: {fileID: 2770946716801852076, guid: fb9a6f2436f859b4f82a988f3a3c335a, type: 3}
-  HeroJSONFile: {fileID: 4900000, guid: 843112a948853c048835a0ad32f6dc0b, type: 3}
 --- !u!114 &784761812
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2706,7 +2700,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1066344060
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2974,7 +2968,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1102826366
 Transform:
   m_ObjectHideFlags: 0
@@ -3017,7 +3011,6 @@ MonoBehaviour:
   DrawCardButton: {fileID: 1098424933}
   EndTurnButton: {fileID: 1703673342}
   ButtonGetterButton: {fileID: 139215008}
-  _gameController: {fileID: 497908370}
 --- !u!114 &1102826368
 MonoBehaviour:
   m_ObjectHideFlags: 0
